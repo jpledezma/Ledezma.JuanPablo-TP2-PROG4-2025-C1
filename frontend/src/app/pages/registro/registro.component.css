@@ -1,3 +1,23 @@
+.registro {
+  margin-top: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center !important;
+  gap: 1.4rem;
+}
+
+.registro > * {
+  margin: 0;
+}
+
+.registro img {
+  width: 8rem;
+}
+
+.form-wrapper {
+  margin-top: 2rem;
+}
+
 #foto-perfil {
   font-size: 1.6rem;
   padding: 0.3rem;

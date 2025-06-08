@@ -1,3 +1,29 @@
+.login {
+  margin: 10rem auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.login .form-wrapper {
+  margin: 0;
+}
+
+.bienvenida {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.bienvenida > span {
+  display: flex;
+  gap: 1.2rem;
+}
+
+.bienvenida img {
+  height: 10rem;
+}
+
 .crear-cuenta {
   display: block !important;
 }
