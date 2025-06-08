@@ -3,3 +3,13 @@
   padding: 0.3rem;
   color: #000;
 }
+.iniciar-sesion {
+  display: block !important;
+}
+
+.iniciar-sesion a,
+.iniciar-sesion span {
+  font-weight: normal;
+  margin: 0.3rem;
+  font-size: 1.6rem;
+}
