@@ -8,10 +8,11 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
+import { FooterComponent } from '../../components/footer/footer.component';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, ReactiveFormsModule, RouterLink],
+  imports: [FormsModule, ReactiveFormsModule, RouterLink, FooterComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })

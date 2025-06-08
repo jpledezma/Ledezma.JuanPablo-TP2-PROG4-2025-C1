@@ -1,0 +1,14 @@
+footer {
+  height: 15rem;
+  display: flex;
+  margin-top: 5rem;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid var(--primary-color-dark);
+  background-color: var(--bg-color);
+}
+footer p span {
+  margin: 0 2rem;
+  font-size: 2rem;
+  font-weight: bold;
+}

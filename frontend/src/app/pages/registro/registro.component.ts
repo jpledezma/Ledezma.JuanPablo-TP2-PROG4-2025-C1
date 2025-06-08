@@ -10,10 +10,11 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
+import { FooterComponent } from '../../components/footer/footer.component';
 
 @Component({
   selector: 'app-registro',
-  imports: [FormsModule, ReactiveFormsModule, RouterLink],
+  imports: [FormsModule, ReactiveFormsModule, RouterLink, FooterComponent],
   templateUrl: './registro.component.html',
   styleUrl: './registro.component.css',
 })
