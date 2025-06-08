@@ -1,1 +1,90 @@
-<p>registro works!</p>
+<h1>Registro</h1>
+<div class="form-wrapper">
+  <form [formGroup]="formulario">
+    <div class="input-wrapper">
+      <label for="nombre">Nombre</label>
+      <input formControlName="nombre" type="text" id="nombre" />
+      @if (this.formulario.controls["nombre"].touched &&
+        this.formulario.controls["nombre"].hasError("required")){
+        <p>Debe completar este campo</p>
+      }
+    </div>
+
+    <div class="input-wrapper">
+      <label for="apellido">Apellido</label>
+      <input formControlName="apellido" type="text" id="apellido" />
+      @if (this.formulario.controls["apellido"].touched &&
+        this.formulario.controls["apellido"].hasError("required")){
+        <p>Debe completar este campo</p>
+      }
+    </div>
+
+    <div class="input-wrapper">
+      <label for="usuario">
+        Nombre de usuario <span style="font-size: 1.2rem">(Min. 4 caracteres)</span>
+      </label>
+      <input formControlName="usuario" type="text" id="usuario" />
+      @if (this.formulario.controls["usuario"].touched &&
+        this.formulario.controls["usuario"].hasError("required")){
+        <p>Debe completar este campo</p>
+      }
+    </div>
+
+    <div class="input-wrapper">
+      <label for="fechaNacimiento">Fecha de nacimiento</label>
+      <input
+        formControlName="fechaNacimiento"
+        type="date"
+        id="fechaNacimiento"
+      />
+      @if (this.formulario.controls["fechaNacimiento"].touched &&
+        this.formulario.controls["fechaNacimiento"].hasError("required")){
+        <p>Debe completar este campo</p>
+      }
+    </div>
+
+    <div class="input-wrapper">
+      <label for="email">Email</label>
+      <input formControlName="email" type="text" id="email" />
+      @if (this.formulario.controls["email"].touched &&
+        this.formulario.controls["email"].hasError("required")){
+        <p>Debe completar este campo</p>
+      }
+    </div>
+
+    <div class="input-wrapper">
+      <label for="pass">
+        Contraseña <br><span style="font-size: 1.2rem">(Min. 8 caracteres, una mayúscula, una minúscula y un número)</span>
+      </label>
+      <input formControlName="pass" type="password" id="pass" />
+      @if (this.formulario.controls["pass"].touched &&
+        this.formulario.controls["pass"].hasError("required")){
+        <p>Debe completar este campo</p>
+      }
+    </div>
+
+    <div class="input-wrapper">
+      <label for="pass-confirm">
+        Confirmar contraseña
+      </label>
+      <input formControlName="passConfirm" type="password" id="pass-confirm" />
+      @if (this.formulario.controls["passConfirm"].touched){
+          @if (this.formulario.controls["passConfirm"].hasError("required")){
+            <p>Debe completar este campo</p>
+          }
+          @else if (this.passConfirm !== this.pass){
+            <p>Las contraseñas no coinciden</p>
+          }
+      }
+    </div>
+
+    <div class="input-wrapper">
+      <label for="foto-perfil">Foto de perfil (opcional)</label>
+      <input formControlName="fotoPerfil" type="file" id="foto-perfil" />
+    </div>
+
+    <div class="form-buttons">
+      <button (click)="guardarUsuario()">Guardar</button>
+    </div>
+  </form>
+</div>
