@@ -13,6 +13,8 @@
   --primary-color-dark: #208a20;
   --secondary-color: #55d0ff;
   --secondary-color-dark: #0080bf;
+  /* --secondary-color: #ab966f;
+  --secondary-color-dark: #897859; */
   --bg-color: #000;
   --bg-color-secondary: #14181f;
   font-size: 10px;
@@ -72,7 +74,7 @@ button {
 button:hover {
   background-color: var(--bg-color);
   color: var(--text-color-emphasis);
-  border: 2px solid var(--secondary-color);
+  border: 2px solid var(--primary-color-dark);
   cursor: pointer;
 }
 
