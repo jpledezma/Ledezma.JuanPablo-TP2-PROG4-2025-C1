@@ -1,1 +1,11 @@
-<p>publicacion works!</p>
+<div class="publicacion">
+    <span class="fecha">{{this.publicacion()?.fecha | date:'dd/MM/yyyy - HH:mm'}}</span>
+    <h3>{{this.publicacion()?.titulo}}</h3>
+    @if (this.publicacion()?.urlImagen) {
+        <div class="image-container">
+            <div class="image-background" [style.background-image]="`url(${this.publicacion()?.urlImagen})`"></div>
+            <img src="{{this.publicacion()?.urlImagen}}" alt="imagen-publicacion">
+        </div>
+    }
+    <p>{{this.publicacion()?.contenido}}</p>
+</div>

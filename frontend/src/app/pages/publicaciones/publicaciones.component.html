@@ -1,2 +1,6 @@
 <app-header></app-header>
-<p>publicaciones works!</p>
+<div class="container">
+    @for (publicacion of this.publicaciones; track $index) {
+        <app-publicacion [publicacion]="publicacion"></app-publicacion>
+    }
+</div>

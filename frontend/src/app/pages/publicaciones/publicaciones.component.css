@@ -1,0 +1,8 @@
+.container {
+  width: fit-content;
+  padding: 5rem;
+  margin: 0 auto;
+  background-color: rgba(89, 89, 89, 0.3);
+  border-radius: 10px;
+  border: 2px solid var(--secondary-color);
+}

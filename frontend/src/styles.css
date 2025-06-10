@@ -11,10 +11,10 @@
   --text-color-emphasis: #f1f1f1;
   --primary-color: #4cbb17;
   --primary-color-dark: #208a20;
-  --secondary-color: #55d0ff;
-  --secondary-color-dark: #0080bf;
-  /* --secondary-color: #ab966f;
-  --secondary-color-dark: #897859; */
+  /* --secondary-color: #55d0ff;
+  --secondary-color-dark: #0080bf; */
+  --secondary-color: #ab966f;
+  --secondary-color-dark: #897859;
   --bg-color: #000;
   --bg-color-secondary: #14181f;
   font-size: 10px;
@@ -62,7 +62,7 @@ a {
 }
 
 button {
-  padding: 1.5rem;
+  padding: 1.2rem 1.5rem;
   font-size: 1.6rem;
   font-weight: bold;
   border-radius: 12.5px;
