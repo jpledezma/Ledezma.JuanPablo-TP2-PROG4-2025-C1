@@ -12,7 +12,16 @@ import { Publicacion } from '../../interfaces/publicacion';
 export class PublicacionesComponent {
   publicaciones: Publicacion[] = [];
   constructor() {
-    this.publicaciones.push({
+    const usuario = {
+      nombre: 'Isaac',
+      apellido: 'Newton',
+      urlFotoPerfil: '',
+      urlFotoThumbnail:
+        'https://avatars.githubusercontent.com/u/75924747?s=40&v=4',
+    };
+    const ejemplo = {
+      id: '',
+      usuario: usuario,
       titulo: 'Titulo',
       contenido:
         'Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus soluta magnam qui recusandae voluptatem consequatur blanditiis? Alias distinctio at odio!',
@@ -20,7 +29,9 @@ export class PublicacionesComponent {
       likes: 0,
       dislikes: 0,
       urlImagen:
-        'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.hdwallpapers.in%2Fdownload%2Ffloating_island_2-HD.jpg&f=1&nofb=1&ipt=a9617adefbf394e70ac2b7d0ba5a16299962ddf0ee56ac86ef5be060d842b385',
-    });
+        'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwallpapercave.com%2Fwp%2Fwp4324870.jpg&f=1&nofb=1&ipt=cfe21230dc1bd411852bce47538462dfd1c47d79fb84ed521ac74a95d87bab4e',
+    };
+    this.publicaciones.push(ejemplo);
+    this.publicaciones.push(ejemplo);
   }
 }

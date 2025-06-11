@@ -1,11 +1,53 @@
 <div class="publicacion">
-    <span class="fecha">{{this.publicacion()?.fecha | date:'dd/MM/yyyy - HH:mm'}}</span>
+    <div class="header-publicacion">
+        <div class="usuario">
+            <img [src]="this.publicacion()?.usuario?.urlFotoThumbnail" alt="foto-usuario">
+            <span>{{`${this.publicacion()?.usuario?.nombre} ${this.publicacion()?.usuario?.apellido}`}}</span>
+        </div>
+        <span class="fecha">{{this.publicacion()?.fecha | date:'dd/MM/yyyy - HH:mm'}}</span>
+    </div>
+
     <h3>{{this.publicacion()?.titulo}}</h3>
+
     @if (this.publicacion()?.urlImagen) {
         <div class="image-container">
             <div class="image-background" [style.background-image]="`url(${this.publicacion()?.urlImagen})`"></div>
             <img src="{{this.publicacion()?.urlImagen}}" alt="imagen-publicacion">
         </div>
     }
+
     <p>{{this.publicacion()?.contenido}}</p>
+
+    <div class="footer-publicacion">
+        <div class="likes" (click)="this.darLike()">
+            <i class="icon-thumb-up" [ngStyle]="this.liked ? { 'color': 'var(--secondary-color)' } : { 'color': 'var(--text-color)' }"></i>
+            <span>{{this.publicacion()?.likes}}</span>
+        </div>
+        <div class="dislikes" (click)="this.darDislike()">
+            <i class="icon-thumb-down" [ngStyle]="this.disliked ? { 'color': 'var(--secondary-color)' } : { 'color': 'var(--text-color)' }"></i>
+            <span>{{this.publicacion()?.dislikes}}</span>
+        </div>
+        <div class="comentarios" (click)="this.mostrarComentarios()">
+            <i class="icon-chat"></i>
+            <span>Comentarios</span>
+        </div>
+    </div>
+
+    @if (this.comentariosVisibles) {
+        <hr>
+        <div class="escribir-comentario">
+            <textarea [(ngModel)]="this.mensaje" placeholder="Escribe un comentario"></textarea>
+            <button (click)="this.enviarComentario()" >Enviar</button>
+        </div>
+        @for (comentario of this.comentarios; track $index) {
+            <div class="comentario">
+                <div class="usuario">
+                    <img [src]="comentario.urlThumbnail" alt="foto-perfil">
+                    <span>{{comentario.nombreUsuario}}</span>
+                    <span class="fecha">{{comentario.fecha | date:'dd/MM/yyyy - HH:mm'}}</span>
+                </div>
+                <p>{{comentario.mensaje}}</p>
+            </div>
+        }
+    }
 </div>

@@ -1,18 +1,39 @@
 .publicacion {
   width: 78rem;
   padding: 2rem;
+  margin: 5rem;
   border-radius: 10px;
-  border: 1px solid var(--primary-color-dark);
+  border: 1px solid var(--secondary-color-dark);
   background-color: var(--bg-color);
   position: relative;
 }
 
-.publicacion .fecha {
-  position: absolute;
-  right: 1.2rem;
-  top: 1.2rem;
+.publicacion .header-publicacion {
+  width: 100%;
   font-size: 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   color: var(--secondary-color);
+}
+
+.usuario {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.6rem;
+}
+
+.usuario img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--secondary-color);
+}
+
+.fecha {
+  margin-left: auto;
+  font-size: 1.4rem;
 }
 
 .publicacion h3 {
@@ -28,10 +49,11 @@
 .publicacion .image-container {
   margin: 3rem 5%;
   width: 90%;
+  min-height: 20rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid var(--primary-color-dark);
+  border: 1px solid var(--secondary-color-dark);
   border-radius: 10px;
   position: relative;
 }
@@ -46,9 +68,70 @@
   overflow: hidden;
 }
 
-.publicacion img {
+.publicacion .image-container img {
   z-index: 1;
   max-width: 100%;
   max-height: 50rem;
   border-radius: 10px;
+}
+
+.publicacion .footer-publicacion {
+  margin: 1rem 5%;
+  width: fit-content;
+  display: flex;
+  gap: 3rem;
+}
+
+.publicacion .footer-publicacion > div {
+  padding: 1rem;
+  display: flex;
+  font-size: 1.8rem;
+  border: 2px solid var(--secondary-color-dark);
+  border-radius: 20px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.publicacion .footer-publicacion > div:hover {
+  border: 2px solid var(--secondary-color);
+  background-color: var(--bg-color-secondary);
+}
+
+.publicacion .footer-publicacion span {
+  color: var(--secondary-color);
+  margin-left: 5px;
+}
+
+.publicacion hr {
+  margin: 3rem 0;
+  color: var(--secondary-color);
+}
+
+.escribir-comentario {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  gap: 2rem;
+}
+
+.escribir-comentario textarea {
+  height: 4rem;
+  padding: 5px;
+  font-size: 2rem;
+  border-radius: 10px;
+  flex-grow: 1;
+}
+
+.comentario {
+  margin: 4rem 0;
+  border-bottom: 1px solid var(--secondary-color-dark);
+}
+
+.comentario:last-of-type {
+  margin: 2rem 0;
+  border-bottom: none;
+}
+
+.comentario .usuario {
+  margin: 0 3rem;
 }
