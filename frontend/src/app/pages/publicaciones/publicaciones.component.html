@@ -1,6 +1,19 @@
 <app-header></app-header>
 <div class="container">
+    <nav>
+        <label for="ordenar">Ordenar:</label>
+        <select id="ordenar">
+            <option value="fecha">Por fecha</option>
+            <option value="likes">Por likes</option>
+            <option value="dislikes">Por dislikes</option>
+        </select>
+        <button (click)="this.crearPublicacion()">Crear publicación</button>
+    </nav>
     @for (publicacion of this.publicaciones; track $index) {
         <app-publicacion [publicacion]="publicacion"></app-publicacion>
     }
 </div>
+
+@if (this.mostrarCrearPublicacion) {
+    <app-crear-publicacion (cerrarForm)="cerrarCrearPublicacion()"></app-crear-publicacion>
+}

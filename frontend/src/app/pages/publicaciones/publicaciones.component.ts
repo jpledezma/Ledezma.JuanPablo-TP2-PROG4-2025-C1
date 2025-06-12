@@ -1,16 +1,19 @@
-import { Component, input, InputSignal } from '@angular/core';
+import { Component } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
 import { PublicacionComponent } from '../../components/publicacion/publicacion.component';
 import { Publicacion } from '../../interfaces/publicacion';
+import { CrearPublicacionComponent } from '../../components/crear-publicacion/crear-publicacion.component';
 
 @Component({
   selector: 'app-publicaciones',
-  imports: [HeaderComponent, PublicacionComponent],
+  imports: [HeaderComponent, PublicacionComponent, CrearPublicacionComponent],
   templateUrl: './publicaciones.component.html',
   styleUrl: './publicaciones.component.css',
 })
 export class PublicacionesComponent {
   publicaciones: Publicacion[] = [];
+  mostrarCrearPublicacion: boolean = false;
+
   constructor() {
     const usuario = {
       nombre: 'Isaac',
@@ -33,5 +36,13 @@ export class PublicacionesComponent {
     };
     this.publicaciones.push(ejemplo);
     this.publicaciones.push(ejemplo);
+  }
+
+  crearPublicacion() {
+    this.mostrarCrearPublicacion = true;
+  }
+
+  cerrarCrearPublicacion() {
+    this.mostrarCrearPublicacion = false;
   }
 }

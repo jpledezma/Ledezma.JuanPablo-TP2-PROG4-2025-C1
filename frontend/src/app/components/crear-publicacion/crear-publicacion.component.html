@@ -1,0 +1,17 @@
+<div class="fondo">
+    <div class="container">
+        <form [formGroup]="this.formulario">
+            <input formControlName="titulo" type="text" placeholder="Título">
+            <textarea formControlName="contenido" placeholder="Contenido"></textarea>
+            <div>
+                <label for="imagen">Imagen:</label>
+                <input formControlName="imagen" id="imagen" type="file" accept="image/png, image/jpeg">
+            </div>
+    
+            <div class="botones">
+                <button (click)="publicar()">Publicar</button>
+                <button (click)="salir()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>

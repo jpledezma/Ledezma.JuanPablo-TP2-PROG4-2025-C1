@@ -5,3 +5,23 @@
   border-radius: 10px;
   border: 2px solid var(--secondary-color);
 }
+
+.container nav {
+  margin: 2rem 5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.container nav label {
+  font-size: 1.6rem;
+}
+
+.container nav select {
+  font-size: 1.6rem;
+  padding: 2px 5px;
+}
+
+.container nav button {
+  margin-left: auto;
+}
