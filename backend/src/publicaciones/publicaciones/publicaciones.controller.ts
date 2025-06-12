@@ -18,6 +18,17 @@ export class PublicacionesController {
 
   @Post()
   create(@Body() publicacion: CreatePublicacionDto) {
+    const publicacionCreada = { ...publicacion };
+    publicacion['usuario'] = {
+      nombre: 'Axel',
+      apellido: 'Kaiser',
+      urlFotoThumbnail:
+        'https://avatars.githubusercontent.com/u/75924747?s=40&v=4',
+    };
+    publicacion['fecha'] = Date.now();
+    publicacion['likes'] = 0;
+    publicacion['dislikes'] = 0;
+
     return this.publicacionesService.create(publicacion);
   }
 
