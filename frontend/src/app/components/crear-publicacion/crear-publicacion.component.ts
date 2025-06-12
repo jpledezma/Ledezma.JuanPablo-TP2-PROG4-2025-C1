@@ -7,6 +7,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { PublicacionesService } from '../../services/publicaciones.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-crear-publicacion',
@@ -49,9 +50,28 @@ export class CrearPublicacionComponent implements OnDestroy {
     let respuesta = await this.service.crearPublicacion(publicacion);
 
     if (respuesta === null) {
-      console.log('Falló');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo cargar tu publicación',
+        theme: 'dark',
+        width: '50rem',
+        customClass: {
+          htmlContainer: 'modal-texto',
+          confirmButton: 'modal-boton',
+        },
+      });
     } else {
-      console.log('Piola');
+      Swal.fire({
+        icon: 'success',
+        text: 'Se cargó tu publicación',
+        theme: 'dark',
+        width: '50rem',
+        customClass: {
+          htmlContainer: 'modal-texto',
+          confirmButton: 'modal-boton',
+        },
+      });
       this.salir();
     }
   }

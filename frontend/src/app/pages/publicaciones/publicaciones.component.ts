@@ -53,6 +53,10 @@ export class PublicacionesComponent implements OnInit {
 
   async traerPublicaciones() {
     let publicacionesTraidas = await this.service.traerPublicaciones();
+    if (publicacionesTraidas === null) {
+      return;
+    }
+
     for (const publicacion of publicacionesTraidas) {
       this.publicaciones.push(publicacion);
     }
