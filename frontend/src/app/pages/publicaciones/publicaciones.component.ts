@@ -40,7 +40,6 @@ export class PublicacionesComponent implements OnInit {
         'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwallpapercave.com%2Fwp%2Fwp4324870.jpg&f=1&nofb=1&ipt=cfe21230dc1bd411852bce47538462dfd1c47d79fb84ed521ac74a95d87bab4e',
     };
     this.publicaciones.push(ejemplo);
-    this.publicaciones.push(ejemplo);
     this.ordenarPublicaciones('fecha');
   }
 
@@ -57,6 +56,11 @@ export class PublicacionesComponent implements OnInit {
     for (const publicacion of publicacionesTraidas) {
       this.publicaciones.push(publicacion);
     }
+  }
+
+  seleccionarOrdenamiento(event: Event) {
+    let valor = (event.target as HTMLSelectElement).value;
+    this.ordenarPublicaciones(valor as 'fecha' | 'likes' | 'dislikes');
   }
 
   ordenarPublicaciones(valor: 'fecha' | 'likes' | 'dislikes') {

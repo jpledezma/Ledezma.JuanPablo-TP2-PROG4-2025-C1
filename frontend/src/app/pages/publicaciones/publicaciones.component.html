@@ -2,7 +2,7 @@
 <div class="container">
     <nav>
         <label for="ordenar">Ordenar:</label>
-        <select id="ordenar">
+        <select id="ordenar" (change)="seleccionarOrdenamiento($event)">
             <option value="fecha">Por fecha</option>
             <option value="likes">Por likes</option>
             <option value="dislikes">Por dislikes</option>
