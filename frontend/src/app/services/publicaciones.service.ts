@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,7 @@ export class PublicacionesService {
   publicaciones: any[];
 
   constructor() {
-    this.url = 'http://localhost:3000/publicaciones';
+    this.url = environment.url + 'publicaciones';
     this.publicaciones = [];
   }
 
