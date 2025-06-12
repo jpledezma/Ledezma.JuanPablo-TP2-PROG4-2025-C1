@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
 import { PublicacionComponent } from '../../components/publicacion/publicacion.component';
 import { Publicacion } from '../../interfaces/publicacion';
 import { CrearPublicacionComponent } from '../../components/crear-publicacion/crear-publicacion.component';
+import { PublicacionesService } from '../../services/publicaciones.service';
 
 @Component({
   selector: 'app-publicaciones',
@@ -10,11 +11,15 @@ import { CrearPublicacionComponent } from '../../components/crear-publicacion/cr
   templateUrl: './publicaciones.component.html',
   styleUrl: './publicaciones.component.css',
 })
-export class PublicacionesComponent {
+export class PublicacionesComponent implements OnInit {
   publicaciones: Publicacion[] = [];
   mostrarCrearPublicacion: boolean = false;
+  service = inject(PublicacionesService);
 
-  constructor() {
+  async ngOnInit() {
+    await this.traerPublicaciones();
+    this.ordenarPublicaciones('fecha');
+
     const usuario = {
       nombre: 'Isaac',
       apellido: 'Newton',
@@ -36,6 +41,7 @@ export class PublicacionesComponent {
     };
     this.publicaciones.push(ejemplo);
     this.publicaciones.push(ejemplo);
+    this.ordenarPublicaciones('fecha');
   }
 
   crearPublicacion() {
@@ -44,5 +50,16 @@ export class PublicacionesComponent {
 
   cerrarCrearPublicacion() {
     this.mostrarCrearPublicacion = false;
+  }
+
+  async traerPublicaciones() {
+    let publicacionesTraidas = await this.service.traerPublicaciones();
+    for (const publicacion of publicacionesTraidas) {
+      this.publicaciones.push(publicacion);
+    }
+  }
+
+  ordenarPublicaciones(valor: 'fecha' | 'likes' | 'dislikes') {
+    this.publicaciones.sort((a, b) => b[valor] - a[valor]); // descendente
   }
 }

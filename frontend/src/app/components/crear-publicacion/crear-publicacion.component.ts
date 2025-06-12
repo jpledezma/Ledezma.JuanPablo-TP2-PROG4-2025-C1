@@ -1,4 +1,4 @@
-import { Component, OnDestroy, output } from '@angular/core';
+import { Component, inject, OnDestroy, output } from '@angular/core';
 import {
   FormGroup,
   FormControl,
@@ -6,6 +6,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { PublicacionesService } from '../../services/publicaciones.service';
 
 @Component({
   selector: 'app-crear-publicacion',
@@ -15,6 +16,7 @@ import {
 })
 export class CrearPublicacionComponent implements OnDestroy {
   cerrarForm = output<void>();
+  service = inject(PublicacionesService);
   formulario: FormGroup;
 
   constructor() {
@@ -37,5 +39,20 @@ export class CrearPublicacionComponent implements OnDestroy {
     this.cerrarForm.emit();
   }
 
-  publicar() {}
+  async publicar() {
+    const publicacion = {
+      usuarioId: 's',
+      titulo: this.formulario.value.titulo.trim(),
+      contenido: this.formulario.value.contenido.trim(),
+    };
+
+    let respuesta = await this.service.crearPublicacion(publicacion);
+
+    if (respuesta === null) {
+      console.log('Falló');
+    } else {
+      console.log('Piola');
+      this.salir();
+    }
+  }
 }
