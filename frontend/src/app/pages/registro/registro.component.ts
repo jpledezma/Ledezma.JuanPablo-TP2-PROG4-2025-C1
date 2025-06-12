@@ -88,6 +88,7 @@ export class RegistroComponent {
     console.log('corrrect');
 
     // crear usuario
+    this.router.navigateByUrl('/inicio');
   }
 
   validarFecha(control: AbstractControl): ValidationErrors | null {

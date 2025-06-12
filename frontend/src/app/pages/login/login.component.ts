@@ -45,7 +45,7 @@ export class LoginComponent {
     }
 
     // const exito = await this.db.iniciarSesion(email, pass);
-    const exito = false;
+    const exito = true;
     if (!exito) {
       Swal.fire({
         icon: 'error',
@@ -62,6 +62,6 @@ export class LoginComponent {
       });
       return;
     }
-    this.router.navigateByUrl('/');
+    this.router.navigateByUrl('/inicio');
   }
 }
