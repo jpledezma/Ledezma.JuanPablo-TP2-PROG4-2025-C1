@@ -1,10 +1,44 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument, Types } from 'mongoose';
+
+@Schema({ collection: 'publicaciones' })
 export class Publicacion {
-  idUsuario: string;
+  _id: Types.ObjectId;
+
+  @Prop({ required: true, type: String })
+  usuarioId: string;
+
+  @Prop({ required: true, type: Number, default: Date.now() })
   fecha: number; // timestamp
+
+  @Prop({ required: true, type: String })
   titulo: string;
+
+  @Prop({ required: true, type: String })
   contenido: string;
+
+  @Prop({ required: false, type: String })
   urlImagen?: string;
-  likes: string[]; // lista de id de usuarios
-  dislikes: string[]; // lista de id de usuarios
+
+  @Prop({
+    type: [Types.ObjectId],
+    default: new Array<Types.ObjectId>(),
+    ref: 'usuarios',
+  })
+  likes: Types.ObjectId[]; // lista de id de usuarios
+
+  @Prop({
+    type: [Types.ObjectId],
+    default: new Array<Types.ObjectId>(),
+    ref: 'usuarios',
+  })
+  dislikes: Types.ObjectId[]; // lista de id de usuarios
+
+  @Prop({ required: true, type: Boolean, default: false })
+  eliminado: boolean;
+
   // los comentarios estan en otra coleccion
 }
+
+export const PublicacionSchema = SchemaFactory.createForClass(Publicacion);
+export type PublicacionDocument = HydratedDocument<Publicacion>;

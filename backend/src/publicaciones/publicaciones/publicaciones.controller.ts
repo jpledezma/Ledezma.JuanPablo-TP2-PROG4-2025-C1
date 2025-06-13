@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
-  NotFoundException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { PublicacionesService } from './publicaciones.service';
 import { CreatePublicacionDto } from './dto/create-publicacion.dto';
 import { UpdatePublicacionDto } from './dto/update-publicacion.dto';
+import { ObjectId } from 'mongodb';
 
 @Controller('publicaciones')
 export class PublicacionesController {
@@ -18,17 +20,6 @@ export class PublicacionesController {
 
   @Post()
   create(@Body() publicacion: CreatePublicacionDto) {
-    const publicacionCreada = { ...publicacion };
-    publicacion['usuario'] = {
-      nombre: 'Axel',
-      apellido: 'Kaiser',
-      urlFotoThumbnail:
-        'https://avatars.githubusercontent.com/u/75924747?s=40&v=4',
-    };
-    publicacion['fecha'] = Date.now();
-    publicacion['likes'] = 0;
-    publicacion['dislikes'] = 0;
-
     return this.publicacionesService.create(publicacion);
   }
 
@@ -38,13 +29,23 @@ export class PublicacionesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    const resultado = this.publicacionesService.findOne(+id);
-    if (!resultado.payload) {
-      throw new NotFoundException(`Publicacion con id ${id} no encontrada`);
+  async findOne(@Param('id') id: string) {
+    let resultado;
+    try {
+      const objectId = new ObjectId(id);
+      resultado = await this.publicacionesService.findOne(objectId);
+    } catch (error) {
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     }
 
-    return this.publicacionesService.findOne(+id);
+    if (resultado) {
+      return resultado;
+    } else {
+      throw new HttpException(
+        'No se encontró la publicación',
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 
   @Patch(':id')
@@ -56,7 +57,22 @@ export class PublicacionesController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.publicacionesService.remove(+id);
+  async remove(@Param('id') id: string) {
+    let resultado;
+    try {
+      const objectId = new ObjectId(id);
+      resultado = await this.publicacionesService.remove(objectId);
+    } catch (error) {
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+    }
+
+    if (resultado) {
+      return resultado;
+    } else {
+      throw new HttpException(
+        'No se encontró la publicación',
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 }
