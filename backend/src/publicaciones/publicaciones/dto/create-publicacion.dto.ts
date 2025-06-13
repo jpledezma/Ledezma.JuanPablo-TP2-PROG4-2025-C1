@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class CreatePublicacionDto {
   @IsString()
@@ -10,7 +10,6 @@ export class CreatePublicacionDto {
   @IsString()
   contenido: string;
 
-  @IsString()
   @IsOptional()
-  urlImagen?: string;
+  urlImagen?: Express.Multer.File;
 }

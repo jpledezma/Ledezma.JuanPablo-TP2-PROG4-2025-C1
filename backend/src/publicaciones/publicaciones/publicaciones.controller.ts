@@ -8,21 +8,47 @@ import {
   Delete,
   HttpException,
   HttpStatus,
+  UseInterceptors,
+  UploadedFile,
+  ParseFilePipe,
+  MaxFileSizeValidator,
 } from '@nestjs/common';
 import { PublicacionesService } from './publicaciones.service';
 import { CreatePublicacionDto } from './dto/create-publicacion.dto';
 import { UpdatePublicacionDto } from './dto/update-publicacion.dto';
 import { ObjectId } from 'mongodb';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('publicaciones')
 export class PublicacionesController {
   constructor(private readonly publicacionesService: PublicacionesService) {}
 
+  filePipe = new ParseFilePipe({
+    fileIsRequired: false,
+    errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+    validators: [new MaxFileSizeValidator({ maxSize: 1500000 })],
+  });
+
   @Post()
-  async create(@Body() publicacion: CreatePublicacionDto) {
-    const publicacionCreada =
-      await this.publicacionesService.create(publicacion);
-    return { payload: publicacionCreada };
+  @UseInterceptors(FileInterceptor('imagen', { dest: 'public' }))
+  async create(
+    @Body()
+    publicacion: CreatePublicacionDto,
+    @UploadedFile(
+      new ParseFilePipe({
+        fileIsRequired: false,
+        errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+        validators: [new MaxFileSizeValidator({ maxSize: 2000000 })],
+      }),
+    )
+    imagen?: Express.Multer.File,
+  ) {
+    const pCreada = await this.publicacionesService.create(publicacion);
+    if (imagen) {
+      const url = process.env.SITIO_URL;
+      pCreada.urlImagen = url + imagen.filename;
+    }
+    return { payload: pCreada };
   }
 
   @Get()
