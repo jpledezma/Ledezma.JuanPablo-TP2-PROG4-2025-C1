@@ -8,10 +8,10 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    /*ConfigModule.forRoot(),
     MongooseModule.forRoot(
       process.env.MONGO_URI ?? 'mongodb://localhost:27017',
-    ),
+    ),*/
     PublicacionesModule,
     UsuarioModule,
   ],

@@ -7,28 +7,30 @@ import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class PublicacionesService {
-  constructor(
-    @InjectModel(Publicacion.name)
-    private publicacionModel: Model<Publicacion>,
-  ) {}
+  constructor() // @InjectModel(Publicacion.name)
+  // private publicacionModel: Model<Publicacion>,
+  {}
 
   async create(publicacionDto: CreatePublicacionDto) {
-    const instancia = new this.publicacionModel(publicacionDto);
-    const guardado = await instancia.save();
+    // const instancia = new this.publicacionModel(publicacionDto);
+    // const guardado = await instancia.save();
 
-    return guardado;
+    // return guardado;
+    return { msg: 'funciona' };
   }
 
   async findAll() {
-    const publicaciones = await this.publicacionModel.find({
-      eliminado: { $eq: false },
-    });
-    return publicaciones;
+    // const publicaciones = await this.publicacionModel.find({
+    //   eliminado: { $eq: false },
+    // });
+    // return publicaciones;
+    return { msg: 'funciona' };
   }
 
   async findOne(id: Types.ObjectId) {
-    const publicacion = await this.publicacionModel.findById(id);
-    return publicacion;
+    // const publicacion = await this.publicacionModel.findById(id);
+    // return publicacion;
+    return { msg: 'funciona' };
   }
 
   update(id: number, publicacion: UpdatePublicacionDto) {
@@ -36,10 +38,11 @@ export class PublicacionesService {
   }
 
   async remove(id: Types.ObjectId) {
-    const eliminado = await this.publicacionModel.updateOne(
-      { _id: id },
-      { eliminado: true },
-    );
-    return eliminado;
+    // const eliminado = await this.publicacionModel.updateOne(
+    //   { _id: id },
+    //   { eliminado: true },
+    // );
+    // return eliminado;
+    return { msg: 'funciona' };
   }
 }

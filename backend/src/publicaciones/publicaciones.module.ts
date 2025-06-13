@@ -10,10 +10,10 @@ import {
 @Module({
   controllers: [PublicacionesController],
   providers: [PublicacionesService],
-  imports: [
+  /*imports: [
     MongooseModule.forFeature([
       { name: Publicacion.name, schema: PublicacionSchema },
     ]),
-  ],
+  ],*/
 })
 export class PublicacionesModule {}
