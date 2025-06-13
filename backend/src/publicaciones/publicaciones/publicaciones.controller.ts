@@ -19,13 +19,16 @@ export class PublicacionesController {
   constructor(private readonly publicacionesService: PublicacionesService) {}
 
   @Post()
-  create(@Body() publicacion: CreatePublicacionDto) {
-    return this.publicacionesService.create(publicacion);
+  async create(@Body() publicacion: CreatePublicacionDto) {
+    const publicacionCreada =
+      await this.publicacionesService.create(publicacion);
+    return { payload: publicacionCreada };
   }
 
   @Get()
-  findAll() {
-    return this.publicacionesService.findAll();
+  async findAll() {
+    const publicaciones = await this.publicacionesService.findAll();
+    return { payload: publicaciones };
   }
 
   @Get(':id')
@@ -67,7 +70,7 @@ export class PublicacionesController {
     }
 
     if (resultado) {
-      return resultado;
+      return { payload: resultado };
     } else {
       throw new HttpException(
         'No se encontró la publicación',
