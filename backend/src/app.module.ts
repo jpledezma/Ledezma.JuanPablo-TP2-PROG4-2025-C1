@@ -5,7 +5,6 @@ import { PublicacionesModule } from './publicaciones/publicaciones.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
-import { SupabaseService } from './supabase/supabase.service';
 
 @Module({
   imports: [
@@ -15,6 +14,6 @@ import { SupabaseService } from './supabase/supabase.service';
     UsuarioModule,
   ],
   controllers: [AppController],
-  providers: [AppService, SupabaseService],
+  providers: [AppService],
 })
 export class AppModule {}
