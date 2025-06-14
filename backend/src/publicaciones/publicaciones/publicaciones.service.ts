@@ -5,12 +5,22 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Publicacion } from './entities/publicacion.entity';
 import { Model, Types } from 'mongoose';
 
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+
 @Injectable()
 export class PublicacionesService {
+  supabase: SupabaseClient<any, 'public', any>;
+  bucket: string;
   constructor(
     @InjectModel(Publicacion.name)
     private publicacionModel: Model<Publicacion>,
-  ) {}
+  ) {
+    this.bucket = 'red-social/';
+    this.supabase = createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_KEY!,
+    );
+  }
 
   async create(publicacionDto: CreatePublicacionDto) {
     const instancia = new this.publicacionModel(publicacionDto);
@@ -41,5 +51,35 @@ export class PublicacionesService {
       { eliminado: true },
     );
     return eliminado;
+  }
+
+  // ----------------------------------------
+
+  async guardarImagen(
+    buffer: any,
+    nombre: string,
+    extension: string,
+    carpeta: 'publicaciones' | 'thumbnails' | 'fotos-perfil',
+  ) {
+    const { data, error } = await this.supabase.storage
+      .from(this.bucket + carpeta)
+      .upload(nombre, buffer, { contentType: `image/${extension}` });
+
+    if (error) {
+      console.log(error);
+      return null;
+    }
+
+    return data;
+  }
+
+  obtenerUrl(
+    path: any,
+    carpeta: 'publicaciones' | 'thumbnails' | 'fotos-perfil',
+  ) {
+    const url = this.supabase.storage
+      .from(this.bucket + carpeta)
+      .getPublicUrl(path);
+    return url;
   }
 }

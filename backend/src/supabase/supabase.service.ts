@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+/*i
+mport { Injectable; } from '@nestjs/common';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 @Injectable()
@@ -41,3 +42,4 @@ export class SupabaseService {
     return url;
   }
 }
+*/

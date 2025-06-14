@@ -20,13 +20,13 @@ import { UpdatePublicacionDto } from './dto/update-publicacion.dto';
 import { ObjectId } from 'mongodb';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { createHash } from 'crypto';
-import { SupabaseService } from 'src/supabase/supabase.service';
+//import { SupabaseService } from 'src/supabase/supabase.service';
 
 @Controller('publicaciones')
 export class PublicacionesController {
   constructor(
     private readonly publicacionesService: PublicacionesService,
-    private readonly supabaseService: SupabaseService,
+    //private readonly supabaseService: SupabaseService,
   ) {}
 
   @Post()
@@ -55,14 +55,19 @@ export class PublicacionesController {
       hash = hash.slice(0, 8); // con 8 caracteres me basta
       const nuevoNombre = `${Date.now()}.${hash}.${extension}`;
       imagen.originalname = nuevoNombre;
-      const data = await this.supabaseService.guardarImagen(
+      const data = await this.publicacionesService.guardarImagen(
+        // const data = await this.supabaseService.guardarImagen(
         imagen.buffer,
         nuevoNombre,
         extension,
         'publicaciones',
       );
 
-      const url = this.supabaseService.obtenerUrl(data?.path, 'publicaciones');
+      // const url = this.supabaseService.obtenerUrl(data?.path, 'publicaciones');
+      const url = this.publicacionesService.obtenerUrl(
+        data?.path,
+        'publicaciones',
+      );
       publicacion.urlImagen = url.data.publicUrl;
     }
 
