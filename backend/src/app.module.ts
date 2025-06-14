@@ -5,7 +5,6 @@ import { PublicacionesModule } from './publicaciones/publicaciones.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
-import { SupabaseModule } from './supabase/supabase.module';
 
 @Module({
   imports: [
@@ -13,7 +12,6 @@ import { SupabaseModule } from './supabase/supabase.module';
     MongooseModule.forRoot(process.env.MONGO_URI!),
     PublicacionesModule,
     UsuarioModule,
-    SupabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],
