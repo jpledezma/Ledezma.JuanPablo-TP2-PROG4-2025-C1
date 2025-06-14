@@ -12,7 +12,6 @@ import {
   UploadedFile,
   ParseFilePipe,
   MaxFileSizeValidator,
-  FileTypeValidator,
 } from '@nestjs/common';
 import { PublicacionesService } from './publicaciones.service';
 import { CreatePublicacionDto } from './dto/create-publicacion.dto';
@@ -38,10 +37,7 @@ export class PublicacionesController {
       new ParseFilePipe({
         fileIsRequired: false,
         errorHttpStatusCode: HttpStatus.BAD_REQUEST,
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 4_000_000 }),
-          new FileTypeValidator({ fileType: /(jpg|jpeg|png)$/ }),
-        ],
+        validators: [new MaxFileSizeValidator({ maxSize: 4_000_000 })],
       }),
     )
     imagen?: Express.Multer.File,
