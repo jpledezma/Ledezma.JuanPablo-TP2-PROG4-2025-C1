@@ -102,6 +102,13 @@ button:hover {
   cursor: pointer;
 }
 
+button:disabled {
+  background-color: #3b3b3b;
+  color: var(--text-color-emphasis);
+  border: var(--text-color-emphasis);
+  cursor: initial;
+}
+
 .form-wrapper {
   margin: 5rem auto;
   padding: 4rem;

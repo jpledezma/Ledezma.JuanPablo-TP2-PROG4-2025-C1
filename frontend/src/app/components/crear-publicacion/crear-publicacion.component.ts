@@ -8,10 +8,11 @@ import {
 } from '@angular/forms';
 import { PublicacionesService } from '../../services/publicaciones.service';
 import Swal from 'sweetalert2';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-crear-publicacion',
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule, NgClass],
   templateUrl: './crear-publicacion.component.html',
   styleUrl: './crear-publicacion.component.css',
 })
@@ -19,6 +20,8 @@ export class CrearPublicacionComponent implements OnDestroy {
   cerrarForm = output<void>();
   service = inject(PublicacionesService);
   formulario: FormGroup;
+  imagen?: File;
+  enEspera = false;
 
   constructor() {
     this.formulario = new FormGroup({
@@ -40,14 +43,29 @@ export class CrearPublicacionComponent implements OnDestroy {
     this.cerrarForm.emit();
   }
 
-  async publicar() {
-    const publicacion = {
-      usuarioId: 's',
-      titulo: this.formulario.value.titulo.trim(),
-      contenido: this.formulario.value.contenido.trim(),
-    };
+  seleccionarArchivo(event: any) {
+    this.imagen = event.target.files[0];
+  }
 
-    let respuesta = await this.service.crearPublicacion(publicacion);
+  cancelarImagen() {
+    this.imagen = undefined;
+  }
+
+  async publicar() {
+    const formData = new FormData();
+    formData.append('usuarioId', 'z');
+    formData.append('titulo', this.formulario.value.titulo.trim());
+    formData.append('contenido', this.formulario.value.contenido.trim());
+
+    if (this.imagen) {
+      formData.append('imagen', this.imagen, this.imagen.name);
+    }
+
+    this.enEspera = true;
+
+    let respuesta = await this.service.crearPublicacion(formData);
+
+    this.enEspera = false;
 
     if (respuesta === null) {
       Swal.fire({
