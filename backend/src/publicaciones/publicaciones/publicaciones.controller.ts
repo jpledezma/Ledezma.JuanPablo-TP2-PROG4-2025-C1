@@ -12,25 +12,25 @@ import {
   UploadedFile,
   ParseFilePipe,
   MaxFileSizeValidator,
+  FileTypeValidator,
 } from '@nestjs/common';
 import { PublicacionesService } from './publicaciones.service';
 import { CreatePublicacionDto } from './dto/create-publicacion.dto';
 import { UpdatePublicacionDto } from './dto/update-publicacion.dto';
 import { ObjectId } from 'mongodb';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { createHash } from 'crypto';
+import { SupabaseService } from 'src/supabase/supabase.service';
 
 @Controller('publicaciones')
 export class PublicacionesController {
-  constructor(private readonly publicacionesService: PublicacionesService) {}
-
-  filePipe = new ParseFilePipe({
-    fileIsRequired: false,
-    errorHttpStatusCode: HttpStatus.BAD_REQUEST,
-    validators: [new MaxFileSizeValidator({ maxSize: 1500000 })],
-  });
+  constructor(
+    private readonly publicacionesService: PublicacionesService,
+    private readonly supabaseService: SupabaseService,
+  ) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('imagen', { dest: 'public' }))
+  @UseInterceptors(FileInterceptor('imagen'))
   async create(
     @Body()
     publicacion: CreatePublicacionDto,
@@ -38,16 +38,36 @@ export class PublicacionesController {
       new ParseFilePipe({
         fileIsRequired: false,
         errorHttpStatusCode: HttpStatus.BAD_REQUEST,
-        validators: [new MaxFileSizeValidator({ maxSize: 2000000 })],
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 4_000_000 }),
+          new FileTypeValidator({ fileType: /(jpg|jpeg|png)$/ }),
+        ],
       }),
     )
     imagen?: Express.Multer.File,
   ) {
-    const pCreada = await this.publicacionesService.create(publicacion);
     if (imagen) {
-      const url = process.env.SITIO_URL;
-      pCreada.urlImagen = url + imagen.filename;
+      const nombreSeparado = imagen.originalname.split('.');
+      const extension = nombreSeparado[nombreSeparado.length - 1];
+      let hash = createHash('md5')
+        .update(imagen.originalname)
+        .digest('base64url');
+      hash = hash.slice(0, 8); // con 8 caracteres me basta
+      const nuevoNombre = `${Date.now()}.${hash}.${extension}`;
+      imagen.originalname = nuevoNombre;
+      const data = await this.supabaseService.guardarImagen(
+        imagen.buffer,
+        nuevoNombre,
+        extension,
+        'publicaciones',
+      );
+
+      const url = this.supabaseService.obtenerUrl(data?.path, 'publicaciones');
+      publicacion.urlImagen = url.data.publicUrl;
     }
+
+    const pCreada = await this.publicacionesService.create(publicacion);
+
     return { payload: pCreada };
   }
 

@@ -11,5 +11,6 @@ export class CreatePublicacionDto {
   contenido: string;
 
   @IsOptional()
-  urlImagen?: Express.Multer.File;
+  @IsString()
+  urlImagen?: string;
 }
