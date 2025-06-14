@@ -7,10 +7,11 @@ import {
   PublicacionSchema,
 } from './publicaciones/entities/publicacion.entity';
 import { SupabaseService } from '../supabase/supabase.service';
+import { AuthService } from '../auth/auth.service';
 
 @Module({
   controllers: [PublicacionesController],
-  providers: [PublicacionesService, SupabaseService],
+  providers: [PublicacionesService, SupabaseService, AuthService],
   imports: [
     MongooseModule.forFeature([
       { name: Publicacion.name, schema: PublicacionSchema },

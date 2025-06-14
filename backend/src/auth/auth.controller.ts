@@ -24,9 +24,16 @@ export class AuthController {
 
     try {
       const usuarioCreado = await this.usuarioService.create(usuarioDto);
-      return { payload: usuarioCreado };
+      const token = this.authService.crearToken(
+        usuarioCreado._id,
+        usuarioCreado.username,
+      );
+
+      return { payload: token };
     } catch (err) {
-      return { error: err };
+      console.log(err);
+
+      return { payload: null };
     }
   }
 
@@ -39,7 +46,7 @@ export class AuthController {
 
     if (!usuario) {
       console.log('no está che');
-      return { payload: null };
+      throw new HttpException('El usuario no existe', HttpStatus.NOT_FOUND);
     }
 
     const isMatch = await bcrypt.compare(body.password, usuario.password);
@@ -54,5 +61,20 @@ export class AuthController {
     const token = this.authService.crearToken(usuario._id, usuario.username);
 
     return { payload: token };
+  }
+
+  @Post('get-new-token')
+  async generarNuevoToken(@Body() body: { token: string }) {
+    // comprobar token y volver a generar
+    const verificado = this.authService.leerToken(body.token);
+    if (!verificado) {
+      throw new HttpException('Token inválido', HttpStatus.UNAUTHORIZED);
+    }
+
+    const id = verificado['id'];
+    const username = verificado['username'];
+    const nuevoToken = this.authService.crearToken(id, username);
+
+    return { payload: nuevoToken };
   }
 }

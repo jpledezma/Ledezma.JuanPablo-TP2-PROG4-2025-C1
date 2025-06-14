@@ -3,7 +3,7 @@ import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Usuario } from './entities/usuario.entity';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class UsuarioService {
@@ -19,8 +19,9 @@ export class UsuarioService {
     return guardado;
   }
 
-  findAll() {
-    return `This action returns all usuario`;
+  async findAll() {
+    const usuarios = await this.usuarioModel.find(); // sacar eliminados
+    return usuarios;
   }
 
   async findById(id: string) {

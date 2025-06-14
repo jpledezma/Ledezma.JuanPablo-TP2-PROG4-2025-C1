@@ -1,10 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { Usuario } from '../usuario/entities/usuario.entity';
+import { sign, verify } from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
   constructor() {}
   crearToken(id: any, username: string) {
-    return 'token bien piola';
+    const payload = {
+      id: id,
+      username: username,
+      iat: Date.now() / 1000,
+      exp: Date.now() / 1000 + 60 * 15,
+    };
+
+    const token = sign(payload, process.env.JWT_SECRET!);
+
+    return token;
+  }
+
+  leerToken(token: string) {
+    try {
+      const decodificado = verify(token, process.env.JWT_SECRET!);
+      return decodificado;
+    } catch (error) {
+      //console.log(error);
+      return null;
+    }
   }
 }

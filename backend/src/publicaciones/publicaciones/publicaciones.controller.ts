@@ -12,6 +12,7 @@ import {
   UploadedFile,
   ParseFilePipe,
   MaxFileSizeValidator,
+  UseGuards,
 } from '@nestjs/common';
 import { PublicacionesService } from './publicaciones.service';
 import { CreatePublicacionDto } from './dto/create-publicacion.dto';
@@ -20,7 +21,9 @@ import { ObjectId } from 'mongodb';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { createHash } from 'crypto';
 import { SupabaseService } from '../../supabase/supabase.service';
+import { LogueadoGuard } from '../../guards/logueado/logueado.guard';
 
+@UseGuards(LogueadoGuard)
 @Controller('publicaciones')
 export class PublicacionesController {
   constructor(
