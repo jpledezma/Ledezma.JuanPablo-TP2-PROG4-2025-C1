@@ -5,21 +5,21 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Publicacion } from './entities/publicacion.entity';
 import { Model, Types } from 'mongoose';
 
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+//import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 @Injectable()
 export class PublicacionesService {
-  supabase: SupabaseClient<any, 'public', any>;
-  bucket: string;
+  // supabase: SupabaseClient<any, 'public', any>;
+  // bucket: string;
   constructor(
     @InjectModel(Publicacion.name)
     private publicacionModel: Model<Publicacion>,
   ) {
-    this.bucket = 'red-social/';
-    this.supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_KEY!,
-    );
+    // this.bucket = 'red-social/';
+    // this.supabase = createClient(
+    //   process.env.SUPABASE_URL!,
+    //   process.env.SUPABASE_KEY!,
+    // );
   }
 
   async create(publicacionDto: CreatePublicacionDto) {
@@ -54,7 +54,7 @@ export class PublicacionesService {
   }
 
   // ----------------------------------------
-
+  /*
   async guardarImagen(
     buffer: any,
     nombre: string,
@@ -82,4 +82,5 @@ export class PublicacionesService {
       .getPublicUrl(path);
     return url;
   }
+  */
 }
