@@ -11,6 +11,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { FooterComponent } from '../../components/footer/footer.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-registro',
@@ -21,6 +22,8 @@ import { FooterComponent } from '../../components/footer/footer.component';
 export class RegistroComponent {
   formulario: FormGroup;
   router = inject(Router);
+  authService = inject(AuthService);
+  foto: any;
 
   constructor() {
     this.formulario = new FormGroup({
@@ -52,8 +55,13 @@ export class RegistroComponent {
     return this.formulario.value.apellido.trim();
   }
 
+  get username() {
+    return this.formulario.value.usuario.trim();
+  }
+
   get fechaNacimiento() {
-    return this.formulario.value.fechaNacimiento;
+    let timestamp = new Date(this.formulario.value.fechaNacimiento).getTime();
+    return String(timestamp);
   }
 
   get email() {
@@ -85,10 +93,36 @@ export class RegistroComponent {
       });
       return;
     }
-    console.log('corrrect');
 
     // crear usuario
-    this.router.navigateByUrl('/inicio');
+    const formData = new FormData();
+    formData.append('nombre', this.nombre);
+    formData.append('apellido', this.apellido);
+    formData.append('email', this.email);
+    formData.append('username', this.username);
+    formData.append('password', this.pass);
+    formData.append('fechaNacimiento', this.fechaNacimiento);
+    if (this.foto) {
+      formData.append('fotoPerfil', this.foto, this.foto.name);
+    }
+
+    const exito: any = await this.authService.registrar(formData);
+
+    if (exito) {
+      this.router.navigateByUrl('/inicio');
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo crear el usuario',
+        theme: 'dark',
+        width: '50rem',
+        customClass: {
+          htmlContainer: 'modal-texto',
+          confirmButton: 'modal-boton',
+        },
+      });
+    }
   }
 
   validarFecha(control: AbstractControl): ValidationErrors | null {
@@ -115,5 +149,9 @@ export class RegistroComponent {
     }
 
     return null;
+  }
+
+  seleccionarFoto(event: any) {
+    this.foto = event.target.files[0];
   }
 }

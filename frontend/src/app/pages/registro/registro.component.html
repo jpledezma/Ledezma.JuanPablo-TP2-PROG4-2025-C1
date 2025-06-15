@@ -83,7 +83,7 @@
 
     <div class="input-wrapper">
       <label for="foto-perfil">Foto de perfil (opcional)</label>
-      <input formControlName="fotoPerfil" type="file" id="foto-perfil" />
+      <input formControlName="fotoPerfil" (change)="seleccionarFoto($event)"  type="file" id="foto-perfil" accept="image/png, image/jpeg" />
     </div>
     
     <div class="input-wrapper iniciar-sesion">
