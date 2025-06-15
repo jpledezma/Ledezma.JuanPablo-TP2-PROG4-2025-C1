@@ -6,7 +6,7 @@ export interface Publicacion {
   fecha: number;
   titulo: string;
   contenido: string;
-  likes: number;
-  dislikes: number;
+  likes: string[];
+  dislikes: string[];
   urlImagen?: string;
 }

@@ -55,6 +55,15 @@ export class AuthService {
     const respuesta = await firstValueFrom(peticion);
     if ((respuesta as Record<string, unknown>)['valido']) {
       this.logueado = true;
+      // En serio typescript?
+      let id = (respuesta as Record<string, unknown>)['id'] as string;
+      this.leerUsuario(id);
     }
+  }
+
+  async leerUsuario(id: string) {
+    const peticion = this.httpClient.get(`${environment.url}usuarios/${id}`);
+    const respuesta = await firstValueFrom(peticion);
+    this.usuario = respuesta;
   }
 }

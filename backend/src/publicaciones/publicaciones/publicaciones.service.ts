@@ -20,9 +20,41 @@ export class PublicacionesService {
   }
 
   async findAll() {
-    const publicaciones = await this.publicacionModel.find({
-      eliminado: { $eq: false },
-    });
+    const publicaciones = await this.publicacionModel.aggregate([
+      { $match: { eliminado: false } },
+      {
+        $addFields: {
+          usuarioObjectId: { $toObjectId: '$usuarioId' },
+        },
+      },
+      {
+        $lookup: {
+          from: 'usuarios',
+          localField: 'usuarioObjectId',
+          foreignField: '_id',
+          as: 'usuario',
+        },
+      },
+      { $unwind: '$usuario' },
+      {
+        $project: {
+          usuarioObjectId: 0,
+          usuarioId: 0,
+          eliminado: 0,
+          __v: 0,
+          usuario: {
+            _id: 0,
+            email: 0,
+            username: 0,
+            password: 0,
+            createdAt: 0,
+            descripcion: 0,
+            eliminado: 0,
+            __v: 0,
+          },
+        },
+      },
+    ]);
     return publicaciones;
   }
 

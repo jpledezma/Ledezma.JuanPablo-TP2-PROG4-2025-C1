@@ -15,5 +15,5 @@
 </div>
 
 @if (this.mostrarCrearPublicacion) {
-    <app-crear-publicacion (cerrarForm)="cerrarCrearPublicacion()"></app-crear-publicacion>
+    <app-crear-publicacion (cerrarForm)="cerrarCrearPublicacion($event)"></app-crear-publicacion>
 }

@@ -1,8 +1,9 @@
-import { Component, input, InputSignal } from '@angular/core';
+import { Component, inject, input, InputSignal } from '@angular/core';
 import { Comentario } from '../../interfaces/comentario';
 import { Publicacion } from '../../interfaces/publicacion';
 import { DatePipe, NgStyle } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-publicacion',
@@ -17,16 +18,17 @@ export class PublicacionComponent {
   liked: boolean = false;
   disliked: boolean = false;
   mensaje: string = '';
+  authService = inject(AuthService);
 
   async darLike() {
     if (this.liked) {
       // await sacar like
-      this.publicacion()!.likes--;
+      this.publicacion()!.likes.pop();
       this.liked = false;
     } else {
       // await dar like
       // recibo el numero de likes y dislikes del await
-      this.publicacion()!.likes++;
+      this.publicacion()!.likes.push(this.authService.usuario._id);
       this.liked = true;
       this.disliked = false;
     }
@@ -35,12 +37,12 @@ export class PublicacionComponent {
   async darDislike() {
     if (this.disliked) {
       // await sacar dislike
-      this.publicacion()!.dislikes--;
+      this.publicacion()!.dislikes.pop();
       this.disliked = false;
     } else {
       // await dar dislike
       // recibo el numero de likes y dislikes del await
-      this.publicacion()!.dislikes++;
+      this.publicacion()!.dislikes.push(this.authService.usuario._id);
       this.disliked = true;
       this.liked = false;
     }

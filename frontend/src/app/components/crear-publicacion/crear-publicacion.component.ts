@@ -9,6 +9,8 @@ import {
 import { PublicacionesService } from '../../services/publicaciones.service';
 import Swal from 'sweetalert2';
 import { NgClass } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
+import { Publicacion } from '../../interfaces/publicacion';
 
 @Component({
   selector: 'app-crear-publicacion',
@@ -17,8 +19,9 @@ import { NgClass } from '@angular/common';
   styleUrl: './crear-publicacion.component.css',
 })
 export class CrearPublicacionComponent implements OnDestroy {
-  cerrarForm = output<void>();
+  cerrarForm = output<Publicacion | null>();
   service = inject(PublicacionesService);
+  auth = inject(AuthService);
   formulario: FormGroup;
   imagen?: File;
   enEspera = false;
@@ -40,7 +43,7 @@ export class CrearPublicacionComponent implements OnDestroy {
   }
 
   salir() {
-    this.cerrarForm.emit();
+    this.cerrarForm.emit(null);
   }
 
   seleccionarArchivo(event: any) {
@@ -53,7 +56,7 @@ export class CrearPublicacionComponent implements OnDestroy {
 
   async publicar() {
     const formData = new FormData();
-    formData.append('usuarioId', 'z');
+    formData.append('usuarioId', this.auth.usuario._id);
     formData.append('titulo', this.formulario.value.titulo.trim());
     formData.append('contenido', this.formulario.value.contenido.trim());
 
@@ -63,7 +66,7 @@ export class CrearPublicacionComponent implements OnDestroy {
 
     this.enEspera = true;
 
-    let respuesta = await this.service.crearPublicacion(formData);
+    const respuesta = await this.service.crearPublicacion(formData);
 
     this.enEspera = false;
 
@@ -90,7 +93,14 @@ export class CrearPublicacionComponent implements OnDestroy {
           confirmButton: 'modal-boton',
         },
       });
-      this.salir();
+      const publicacionCreada = (respuesta as any)['payload'];
+      publicacionCreada.usuario = {
+        nombre: this.auth.usuario.nombre,
+        apellido: this.auth.usuario.apellido,
+        urlFotoPerfil: this.auth.usuario.urlFotoPerfil,
+        urlFotoThumbnail: this.auth.usuario.urlFotoThumbnail,
+      };
+      this.cerrarForm.emit(publicacionCreada);
     }
   }
 }

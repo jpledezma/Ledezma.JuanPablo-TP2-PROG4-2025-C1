@@ -68,9 +68,16 @@ export class AuthController {
   @Get('validar')
   async validarToken(@Headers() headers: any) {
     const token = headers.authorization.split(' ')[1];
-    const verificado = this.authService.leerToken(token);
+    const decodificado = this.authService.leerToken(token);
 
-    return { valido: verificado !== null };
+    if (!decodificado) {
+      return { valido: false };
+    } else {
+      return {
+        valido: decodificado !== null,
+        id: (decodificado as any).id,
+      };
+    }
   }
 
   @Get('refresh-token')
