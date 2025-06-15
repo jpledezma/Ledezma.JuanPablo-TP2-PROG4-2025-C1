@@ -57,6 +57,7 @@ export class UsuarioController {
     const payload: GetPublicUsuarioDto = {
       nombre: usuario.nombre,
       apellido: usuario.apellido,
+      username: usuario.username,
       descripcion: usuario.descripcion,
       urlFotoPerfil: usuario.urlFotoPerfil,
       urlFotoThumbnail: usuario.urlFotoPerfil,
