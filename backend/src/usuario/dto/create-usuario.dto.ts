@@ -16,6 +16,9 @@ export class CreateUsuarioDto {
   @IsString()
   password: string;
 
+  @IsString() // form-data solo manda texto :3
+  fechaNacimiento: number;
+
   @IsOptional()
   @IsString()
   descripcion?: string;

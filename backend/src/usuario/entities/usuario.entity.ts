@@ -20,6 +20,9 @@ export class Usuario {
   @Prop({ required: true, type: String })
   password: string;
 
+  @Prop({ required: true, type: Number })
+  fechaNacimiento: number;
+
   @Prop({
     type: String,
     default:

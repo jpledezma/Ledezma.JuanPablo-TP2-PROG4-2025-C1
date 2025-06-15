@@ -6,25 +6,69 @@ import {
   HttpStatus,
   Headers,
   Get,
+  UseInterceptors,
+  UploadedFile,
+  MaxFileSizeValidator,
+  ParseFilePipe,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { CreateUsuarioDto } from '../usuario/dto/create-usuario.dto';
 import { UsuarioService } from '../usuario/usuario.service';
 import { AuthService } from './auth.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { SupabaseService } from '../supabase/supabase.service';
+import { createHash } from 'crypto';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly usuarioService: UsuarioService,
     private readonly authService: AuthService,
+    private readonly supabaseService: SupabaseService,
   ) {}
+
   @Post('registro')
-  async registrar(@Body() usuarioDto: CreateUsuarioDto) {
+  @UseInterceptors(FileInterceptor('fotoPerfil'))
+  async registrar(
+    @Body() usuarioDto: CreateUsuarioDto,
+    @UploadedFile(
+      new ParseFilePipe({
+        fileIsRequired: false,
+        errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+        validators: [new MaxFileSizeValidator({ maxSize: 4_000_000 })],
+      }),
+    )
+    fotoPerfil?: Express.Multer.File,
+  ) {
+    if (fotoPerfil) {
+      const nombreSeparado = fotoPerfil.originalname.split('.');
+      const extension = nombreSeparado[nombreSeparado.length - 1];
+      let hash = createHash('md5')
+        .update(fotoPerfil.originalname)
+        .digest('base64url');
+      hash = hash.slice(0, 8); // con 8 caracteres me basta
+      const nuevoNombre = `${Date.now()}.${hash}.${extension}`;
+      fotoPerfil.originalname = nuevoNombre;
+
+      const data = await this.supabaseService.guardarImagen(
+        fotoPerfil.buffer,
+        nuevoNombre,
+        extension,
+        'fotos-perfil',
+      );
+
+      const url = this.supabaseService.obtenerUrl(data?.path, 'fotos-perfil');
+
+      usuarioDto.urlFotoPerfil = url.data.publicUrl;
+      usuarioDto.urlFotoThumbnail = url.data.publicUrl;
+      // esto podria ser un middleware
+    }
     const salt = 12;
     const hash = await bcrypt.hash(usuarioDto.password, salt);
     usuarioDto.password = hash;
 
     try {
+      usuarioDto.fechaNacimiento = +usuarioDto.fechaNacimiento;
       const usuarioCreado = await this.usuarioService.create(usuarioDto);
       const token = this.authService.crearToken(
         usuarioCreado._id,
@@ -34,8 +78,6 @@ export class AuthController {
       return { payload: token };
     } catch (err) {
       console.log(err);
-
-      return { payload: null };
     }
   }
 

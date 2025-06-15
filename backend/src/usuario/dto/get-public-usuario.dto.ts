@@ -4,5 +4,5 @@ import { CreateUsuarioDto } from './create-usuario.dto';
 export class GetPublicUsuarioDto extends OmitType(CreateUsuarioDto, [
   'password',
   'email',
-  'username',
+  'fechaNacimiento',
 ]) {}
