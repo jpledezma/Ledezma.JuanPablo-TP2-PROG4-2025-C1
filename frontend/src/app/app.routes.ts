@@ -1,29 +1,43 @@
 import { Routes } from '@angular/router';
-import { RegistroComponent } from './pages/registro/registro.component';
-import { LoginComponent } from './pages/login/login.component';
-import { PublicacionesComponent } from './pages/publicaciones/publicaciones.component';
-import { MiPerfilComponent } from './pages/mi-perfil/mi-perfil.component';
+import { sessionGuard } from './guards/session.guard';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
     path: 'registro',
-    component: RegistroComponent,
+    canActivate: [sessionGuard],
+    loadComponent: () =>
+      import('./pages/registro/registro.component').then(
+        (modulo) => modulo.RegistroComponent,
+      ),
   },
   {
     path: 'login',
-    component: LoginComponent,
+    canActivate: [sessionGuard],
+    loadComponent: () =>
+      import('./pages/login/login.component').then(
+        (modulo) => modulo.LoginComponent,
+      ),
   },
   {
     path: 'inicio',
-    component: PublicacionesComponent,
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/publicaciones/publicaciones.component').then(
+        (modulo) => modulo.PublicacionesComponent,
+      ),
   },
   {
     path: 'mi-perfil',
-    component: MiPerfilComponent,
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/mi-perfil/mi-perfil.component').then(
+        (modulo) => modulo.MiPerfilComponent,
+      ),
   },
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'login',
+    redirectTo: 'inicio',
   },
 ];

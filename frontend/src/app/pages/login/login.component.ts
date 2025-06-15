@@ -9,6 +9,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { FooterComponent } from '../../components/footer/footer.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +20,7 @@ import { FooterComponent } from '../../components/footer/footer.component';
 export class LoginComponent {
   formulario: FormGroup;
   router = inject(Router);
+  authService = inject(AuthService);
 
   constructor() {
     this.formulario = new FormGroup({
@@ -44,8 +46,8 @@ export class LoginComponent {
       return;
     }
 
-    // const exito = await this.db.iniciarSesion(email, pass);
-    const exito = true;
+    const exito = await this.authService.loguear(email, pass);
+
     if (!exito) {
       Swal.fire({
         icon: 'error',
