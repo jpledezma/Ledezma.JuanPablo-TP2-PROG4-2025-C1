@@ -4,6 +4,8 @@ import {
   Body,
   HttpException,
   HttpStatus,
+  Headers,
+  Get,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { CreateUsuarioDto } from '../usuario/dto/create-usuario.dto';
@@ -63,10 +65,20 @@ export class AuthController {
     return { payload: token };
   }
 
-  @Post('get-new-token')
-  async generarNuevoToken(@Body() body: { token: string }) {
+  @Get('validar')
+  async validarToken(@Headers() headers: any) {
+    const token = headers.authorization.split(' ')[1];
+    const verificado = this.authService.leerToken(token);
+
+    return { valido: verificado !== null };
+  }
+
+  @Get('refresh-token')
+  generarNuevoToken(@Headers() headers: any) {
     // comprobar token y volver a generar
-    const verificado = this.authService.leerToken(body.token);
+    const token = headers.authorization.split(' ')[1];
+
+    const verificado = this.authService.leerToken(token);
     if (!verificado) {
       throw new HttpException('Token inválido', HttpStatus.UNAUTHORIZED);
     }
