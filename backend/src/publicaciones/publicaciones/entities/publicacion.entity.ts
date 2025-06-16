@@ -5,10 +5,10 @@ import { HydratedDocument, Types } from 'mongoose';
 export class Publicacion {
   _id: Types.ObjectId;
 
-  @Prop({ required: true, type: String })
-  usuarioId: string;
+  @Prop({ required: true, type: Types.ObjectId })
+  usuarioId: Types.ObjectId;
 
-  @Prop({ required: true, type: Number, default: Date.now() })
+  @Prop({ required: true, type: Number })
   fecha: number; // timestamp
 
   @Prop({ required: true, type: String })
@@ -34,7 +34,7 @@ export class Publicacion {
   })
   dislikes: Types.ObjectId[]; // lista de id de usuarios
 
-  @Prop({ required: true, type: Boolean, default: false })
+  @Prop({ type: Boolean, default: false })
   eliminado: boolean;
 
   // los comentarios estan en otra coleccion

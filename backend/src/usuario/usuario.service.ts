@@ -13,7 +13,10 @@ export class UsuarioService {
   ) {}
 
   async create(usuarioDto: CreateUsuarioDto) {
-    const instancia = new this.usuarioModel(usuarioDto);
+    const instancia = new this.usuarioModel({
+      ...usuarioDto,
+      createdAt: Date.now(),
+    });
     const guardado = await instancia.save();
 
     return guardado;

@@ -37,13 +37,13 @@ export class Usuario {
   })
   urlFotoThumbnail: string;
 
-  @Prop({ required: false, type: Number, default: Date.now() })
-  createdAt?: number;
-
   @Prop({ required: false, type: String, maxlength: 255 })
   descripcion?: string;
 
-  @Prop({ required: true, type: Boolean, default: false })
+  @Prop({ required: true, type: Number })
+  createdAt: number;
+
+  @Prop({ type: Boolean, default: false })
   eliminado: boolean;
 }
 

@@ -13,7 +13,10 @@ export class PublicacionesService {
   ) {}
 
   async create(publicacionDto: CreatePublicacionDto) {
-    const instancia = new this.publicacionModel(publicacionDto);
+    const instancia = new this.publicacionModel({
+      ...publicacionDto,
+      fecha: Date.now(),
+    });
     const guardado = await instancia.save();
 
     return guardado;
