@@ -125,4 +125,29 @@ export class PublicacionesController {
       );
     }
   }
+
+  // agregar throttler
+  @Post('/like')
+  async like(@Body() body: { usuarioId: string; publicacionId: string }) {
+    const { usuarioId, publicacionId } = body;
+    try {
+      await this.publicacionesService.darLike(usuarioId, publicacionId);
+      return { payload: true };
+    } catch (err) {
+      console.log(err);
+      // internal server error
+    }
+  }
+
+  @Post('/dislike')
+  async dislike(@Body() body: { usuarioId: string; publicacionId: string }) {
+    const { usuarioId, publicacionId } = body;
+    try {
+      await this.publicacionesService.darDislike(usuarioId, publicacionId);
+      return { payload: true };
+    } catch (err) {
+      console.log(err);
+      // internal server error
+    }
+  }
 }

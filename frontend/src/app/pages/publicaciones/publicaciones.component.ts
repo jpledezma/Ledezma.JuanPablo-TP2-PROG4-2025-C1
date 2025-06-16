@@ -28,7 +28,7 @@ export class PublicacionesComponent implements OnInit {
         'https://avatars.githubusercontent.com/u/75924747?s=40&v=4',
     };
     const ejemplo = {
-      id: '',
+      _id: '',
       usuario: usuario,
       titulo: 'Titulo',
       contenido:

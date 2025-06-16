@@ -1,7 +1,7 @@
 import { Usuario } from './usuario';
 
 export interface Publicacion {
-  id: string;
+  _id: string;
   usuario: Usuario;
   fecha: number;
   titulo: string;

@@ -28,7 +28,7 @@
 }
 
 body {
-  background: linear-gradient(to bottom, #000, #161616, #000);
+  background: linear-gradient(to bottom, #000, #101010, #171717, #101010, #000);
   color: var(--text-color);
 }
 

@@ -32,7 +32,7 @@ export class PublicacionesService {
   }
 
   async crearPublicacion(publicacion: any) {
-    let respuesta;
+    let respuesta: any;
     const peticion = this.httpClient.post(this.url, publicacion);
     try {
       respuesta = await firstValueFrom(peticion);
@@ -42,5 +42,19 @@ export class PublicacionesService {
     }
 
     return respuesta;
+  }
+
+  interactuar(
+    publicacionId: string,
+    usuarioId: string,
+    interaccion: 'like' | 'dislike',
+  ) {
+    const body = { publicacionId, usuarioId };
+    const peticion = this.httpClient.post(`${this.url}/${interaccion}`, body);
+    try {
+      firstValueFrom(peticion);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

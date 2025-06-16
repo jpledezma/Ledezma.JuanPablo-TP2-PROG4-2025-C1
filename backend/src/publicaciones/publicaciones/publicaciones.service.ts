@@ -74,4 +74,60 @@ export class PublicacionesService {
     );
     return eliminado;
   }
+
+  async darLike(usuarioId: string, publicacionId: string) {
+    const liked = await this.comprobarLike(usuarioId, publicacionId);
+
+    if (liked) {
+      await this.publicacionModel.updateOne(
+        { _id: new Types.ObjectId(publicacionId) },
+        { $pull: { likes: new Types.ObjectId(usuarioId) } },
+      );
+    } else {
+      await this.publicacionModel.updateOne(
+        { _id: new Types.ObjectId(publicacionId) },
+        {
+          $push: { likes: new Types.ObjectId(usuarioId) },
+          $pull: { dislikes: new Types.ObjectId(usuarioId) },
+        },
+      );
+    }
+  }
+
+  async darDislike(usuarioId: string, publicacionId: string) {
+    const disliked = await this.comprobarDislike(usuarioId, publicacionId);
+
+    if (disliked) {
+      await this.publicacionModel.updateOne(
+        { _id: new Types.ObjectId(publicacionId) },
+        { $pull: { dislikes: new Types.ObjectId(usuarioId) } },
+      );
+    } else {
+      await this.publicacionModel.updateOne(
+        { _id: new Types.ObjectId(publicacionId) },
+        {
+          $push: { dislikes: new Types.ObjectId(usuarioId) },
+          $pull: { likes: new Types.ObjectId(usuarioId) },
+        },
+      );
+    }
+  }
+
+  private async comprobarLike(usuarioId: string, publicacionId: string) {
+    const encontrado = await this.publicacionModel.findOne({
+      _id: new Types.ObjectId(publicacionId),
+      likes: new Types.ObjectId(usuarioId),
+    });
+
+    return encontrado !== null;
+  }
+
+  private async comprobarDislike(usuarioId: string, publicacionId: string) {
+    const encontrado = await this.publicacionModel.findOne({
+      _id: new Types.ObjectId(publicacionId),
+      dislikes: new Types.ObjectId(usuarioId),
+    });
+
+    return encontrado !== null;
+  }
 }
