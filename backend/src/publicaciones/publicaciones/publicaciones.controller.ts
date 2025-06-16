@@ -22,6 +22,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { createHash } from 'crypto';
 import { SupabaseService } from '../../supabase/supabase.service';
 import { LogueadoGuard } from '../../guards/logueado/logueado.guard';
+import { Throttle } from '@nestjs/throttler';
 
 @UseGuards(LogueadoGuard)
 @Controller('publicaciones')
@@ -126,7 +127,7 @@ export class PublicacionesController {
     }
   }
 
-  // agregar throttler
+  @Throttle({ default: { limit: 3, ttl: 2000 } })
   @Post('/like')
   async like(@Body() body: { usuarioId: string; publicacionId: string }) {
     const { usuarioId, publicacionId } = body;
@@ -139,6 +140,7 @@ export class PublicacionesController {
     }
   }
 
+  @Throttle({ default: { limit: 3, ttl: 2000 } })
   @Post('/dislike')
   async dislike(@Body() body: { usuarioId: string; publicacionId: string }) {
     const { usuarioId, publicacionId } = body;
