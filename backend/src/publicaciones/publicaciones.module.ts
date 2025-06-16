@@ -8,6 +8,7 @@ import {
 } from './publicaciones/entities/publicacion.entity';
 import { SupabaseService } from '../supabase/supabase.service';
 import { AuthService } from '../auth/auth.service';
+import { ComentariosModule } from './comentarios/comentarios.module';
 
 @Module({
   controllers: [PublicacionesController],
@@ -16,6 +17,7 @@ import { AuthService } from '../auth/auth.service';
     MongooseModule.forFeature([
       { name: Publicacion.name, schema: PublicacionSchema },
     ]),
+    ComentariosModule,
   ],
 })
 export class PublicacionesModule {}

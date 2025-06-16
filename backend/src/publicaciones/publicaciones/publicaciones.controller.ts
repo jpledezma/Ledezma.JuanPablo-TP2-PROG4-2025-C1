@@ -79,7 +79,7 @@ export class PublicacionesController {
     return { payload: publicaciones };
   }
 
-  @Get(':id')
+  @Get('publicacion/:id')
   async findOne(@Param('id') id: string) {
     let resultado;
     try {
@@ -99,7 +99,7 @@ export class PublicacionesController {
     }
   }
 
-  @Patch(':id')
+  @Patch('publicacion/:id')
   update(
     @Param('id') id: string,
     @Body() updatePublicacioneDto: UpdatePublicacionDto,
@@ -107,7 +107,7 @@ export class PublicacionesController {
     return this.publicacionesService.update(+id, updatePublicacioneDto);
   }
 
-  @Delete(':id')
+  @Delete('publicacion/:id')
   async remove(@Param('id') id: string) {
     let resultado;
     try {

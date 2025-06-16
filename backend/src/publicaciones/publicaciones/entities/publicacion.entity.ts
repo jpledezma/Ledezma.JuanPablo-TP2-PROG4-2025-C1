@@ -5,7 +5,7 @@ import { HydratedDocument, Types } from 'mongoose';
 export class Publicacion {
   _id: Types.ObjectId;
 
-  @Prop({ required: true, type: Types.ObjectId })
+  @Prop({ required: true, type: Types.ObjectId, ref: 'usuarios' })
   usuarioId: Types.ObjectId;
 
   @Prop({ required: true, type: Number })
