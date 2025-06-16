@@ -78,4 +78,9 @@ export class PublicacionesComponent implements OnInit {
       this.publicaciones.sort((a, b) => b[valor].length - a[valor].length);
     }
   }
+
+  volverArriba() {
+    const container = document.querySelector('.container');
+    container?.scroll({ top: 0 });
+  }
 }

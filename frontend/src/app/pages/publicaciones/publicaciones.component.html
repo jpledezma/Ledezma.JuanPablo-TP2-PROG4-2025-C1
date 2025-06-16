@@ -12,6 +12,7 @@
     @for (publicacion of this.publicaciones; track $index) {
         <app-publicacion [publicacion]="publicacion"></app-publicacion>
     }
+    <button id="volver-arriba" (click)="volverArriba()"><i class="icon-circle-up"></i></button>
 </div>
 
 @if (this.mostrarCrearPublicacion) {

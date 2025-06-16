@@ -229,3 +229,21 @@ button:disabled {
 .icon-menu:before {
   content: '\e903';
 }
+.icon-images:before {
+  content: '\e909';
+}
+.icon-eye:before {
+  content: '\e9ce';
+}
+.icon-eye-blocked:before {
+  content: '\e9d1';
+}
+.icon-circle-up:before {
+  content: '\ea41';
+}
+.icon-add-outline:before {
+  content: '\e908';
+}
+.icon-dots-three-vertical:before {
+  content: '\e907';
+}
