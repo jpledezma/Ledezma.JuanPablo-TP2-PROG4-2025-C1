@@ -1,6 +1,5 @@
 header {
   height: 7rem;
-  margin-bottom: 5rem;
   border-bottom: 2px solid var(--primary-color-dark);
   background-color: var(--bg-color-secondary);
 }
@@ -39,4 +38,17 @@ nav .menu-usuario {
   display: flex;
   align-items: center;
   gap: 5rem;
+}
+
+.menu-usuario a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.menu-usuario a img {
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
 }

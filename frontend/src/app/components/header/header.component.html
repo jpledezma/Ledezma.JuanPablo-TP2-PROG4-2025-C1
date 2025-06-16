@@ -8,7 +8,10 @@
         </a>
 
         <div class="menu-usuario">
-            <a routerLink="/mi-perfil"> <i class="icon-user-circle"></i> Mi perfil</a>
+            <a routerLink="/mi-perfil"> 
+                <img [src]="authService.usuario.urlFotoThumbnail" alt="foto-perfil"> 
+                Mi perfil
+            </a>
             <button (click)="cerrarSesion()">Cerrar sesión</button>
         </div>
     </nav>

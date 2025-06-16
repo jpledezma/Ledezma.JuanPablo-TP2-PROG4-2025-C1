@@ -21,17 +21,14 @@
   --text-color-emphasis: #f1f1f1;
   --primary-color: #4cbb17;
   --primary-color-dark: #208a20;
-  /* --secondary-color: #55d0ff;
-  --secondary-color-dark: #0080bf; */
-  --secondary-color: #ab966f;
-  --secondary-color-dark: #897859;
+  --secondary-color: #b5e61d;
   --bg-color: #000;
   --bg-color-secondary: #14181f;
   font-size: 10px;
 }
 
 body {
-  background-color: var(--bg-color);
+  background: linear-gradient(to bottom, #000, #161616, #000);
   color: var(--text-color);
 }
 
@@ -98,7 +95,7 @@ button {
 button:hover {
   background-color: var(--bg-color);
   color: var(--text-color-emphasis);
-  border: 2px solid var(--primary-color-dark);
+  border: 2px solid var(--secondary-color);
   cursor: pointer;
 }
 

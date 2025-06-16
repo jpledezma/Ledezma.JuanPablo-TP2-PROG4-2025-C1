@@ -20,11 +20,11 @@
 
     <div class="footer-publicacion">
         <div class="likes" (click)="this.darLike()">
-            <i class="icon-thumb-up" [ngStyle]="this.liked ? { 'color': 'var(--secondary-color)' } : { 'color': 'var(--text-color)' }"></i>
+            <i class="icon-thumb-up" [ngStyle]="this.liked ? { 'color': 'var(--primary-color)' } : { 'color': 'var(--text-color)' }"></i>
             <span>{{this.publicacion()?.likes?.length}}</span>
         </div>
         <div class="dislikes" (click)="this.darDislike()">
-            <i class="icon-thumb-down" [ngStyle]="this.disliked ? { 'color': 'var(--secondary-color)' } : { 'color': 'var(--text-color)' }"></i>
+            <i class="icon-thumb-down" [ngStyle]="this.disliked ? { 'color': 'var(--primary-color)' } : { 'color': 'var(--text-color)' }"></i>
             <span>{{this.publicacion()?.dislikes?.length}}</span>
         </div>
         <div class="comentarios" (click)="this.mostrarComentarios()">
