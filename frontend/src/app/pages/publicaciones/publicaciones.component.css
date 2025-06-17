@@ -4,8 +4,9 @@
   margin: 0 auto;
   background-color: rgba(89, 89, 89, 0.25);
   overflow-y: scroll;
-  max-height: calc(100vh - 7rem - 2px);
+  height: calc(100vh - 7rem - 2px);
   scroll-behavior: smooth;
+  scrollbar-color: rgba(32, 138, 32, 0.3) transparent;
 }
 
 .container nav {

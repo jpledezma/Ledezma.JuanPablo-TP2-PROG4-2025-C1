@@ -19,29 +19,6 @@ export class PublicacionesComponent implements OnInit {
   async ngOnInit() {
     await this.traerPublicaciones();
     this.ordenarPublicaciones('fecha');
-
-    const usuario = {
-      nombre: 'Isaac',
-      apellido: 'Newton',
-      username: 'inewton',
-      urlFotoPerfil: '',
-      urlFotoThumbnail:
-        'https://avatars.githubusercontent.com/u/75924747?s=40&v=4',
-    };
-    const ejemplo = {
-      _id: '',
-      usuario: usuario,
-      titulo: 'Titulo',
-      contenido:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus soluta magnam qui recusandae voluptatem consequatur blanditiis? Alias distinctio at odio!',
-      fecha: Date.now(),
-      likes: [],
-      dislikes: [],
-      urlImagen:
-        'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwallpapercave.com%2Fwp%2Fwp4324870.jpg&f=1&nofb=1&ipt=cfe21230dc1bd411852bce47538462dfd1c47d79fb84ed521ac74a95d87bab4e',
-    };
-    this.publicaciones.push(ejemplo);
-    this.ordenarPublicaciones('fecha');
   }
 
   crearPublicacion() {
