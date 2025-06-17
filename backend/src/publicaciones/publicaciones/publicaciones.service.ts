@@ -14,7 +14,10 @@ export class PublicacionesService {
 
   async create(publicacionDto: CreatePublicacionDto) {
     const instancia = new this.publicacionModel({
-      ...publicacionDto,
+      contenido: publicacionDto.contenido,
+      titulo: publicacionDto.titulo,
+      urlImagen: publicacionDto.urlImagen,
+      usuarioId: new Types.ObjectId(publicacionDto.usuarioId),
       fecha: Date.now(),
     });
     const guardado = await instancia.save();
@@ -22,41 +25,55 @@ export class PublicacionesService {
     return guardado;
   }
 
-  async findAll() {
-    const publicaciones = await this.publicacionModel.aggregate([
-      { $match: { eliminado: false } },
-      {
-        $addFields: {
-          usuarioObjectId: { $toObjectId: '$usuarioId' },
-        },
+  async findAll(offset?: number, limit?: number, usuarioId?: string) {
+    const agregacion: any[] = [];
+    const match: any = { $match: { eliminado: false } };
+    if (usuarioId) {
+      match.$match.usuarioId = usuarioId;
+    }
+
+    const buscarDatosUsuario = {
+      $lookup: {
+        from: 'usuarios',
+        localField: 'usuarioId',
+        foreignField: '_id',
+        as: 'usuario',
       },
-      {
-        $lookup: {
-          from: 'usuarios',
-          localField: 'usuarioObjectId',
-          foreignField: '_id',
-          as: 'usuario',
-        },
-      },
-      { $unwind: '$usuario' },
-      {
-        $project: {
-          usuarioObjectId: 0,
-          usuarioId: 0,
+    };
+
+    const obtenerUsuario = { $unwind: '$usuario' };
+
+    const eliminarCamposInnecesarios = {
+      $project: {
+        usuarioId: 0,
+        eliminado: 0,
+        __v: 0,
+        usuario: {
+          _id: 0,
+          email: 0,
+          password: 0,
+          createdAt: 0,
+          descripcion: 0,
           eliminado: 0,
           __v: 0,
-          usuario: {
-            _id: 0,
-            email: 0,
-            password: 0,
-            createdAt: 0,
-            descripcion: 0,
-            eliminado: 0,
-            __v: 0,
-          },
         },
       },
-    ]);
+    };
+
+    agregacion.push(
+      match,
+      buscarDatosUsuario,
+      obtenerUsuario,
+      eliminarCamposInnecesarios,
+    );
+
+    if (offset !== undefined && limit !== undefined) {
+      agregacion.push({ $skip: offset });
+      agregacion.push({ $limit: limit });
+    }
+
+    const publicaciones = await this.publicacionModel.aggregate(agregacion);
+
     return publicaciones;
   }
 

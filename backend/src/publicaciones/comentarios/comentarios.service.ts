@@ -21,7 +21,9 @@ export class ComentariosService {
       return null;
     }
     const instancia = new this.comentarioModel({
-      ...comentarioDto,
+      publicacionId: new Types.ObjectId(comentarioDto.publicacionId),
+      usuarioId: new Types.ObjectId(comentarioDto.usuarioId),
+      contenido: comentarioDto.contenido,
       fecha: Date.now(),
     });
 
@@ -31,41 +33,53 @@ export class ComentariosService {
   }
 
   async findAll(publicacionId: string) {
-    const comentarios = await this.comentarioModel.aggregate([
-      { $match: { eliminado: false, publicacionId: publicacionId } },
-      {
-        $addFields: {
-          usuarioObjectId: { $toObjectId: '$usuarioId' },
-        },
+    const agregacion: any[] = [];
+
+    const match: any = {
+      $match: {
+        eliminado: false,
+        publicacionId: new Types.ObjectId(publicacionId),
       },
-      {
-        $lookup: {
-          from: 'usuarios',
-          localField: 'usuarioObjectId',
-          foreignField: '_id',
-          as: 'usuario',
-        },
+    };
+
+    const buscarDatosUsuario = {
+      $lookup: {
+        from: 'usuarios',
+        localField: 'usuarioId',
+        foreignField: '_id',
+        as: 'usuario',
       },
-      { $unwind: '$usuario' },
-      {
-        $project: {
-          usuarioObjectId: 0,
-          usuarioId: 0,
-          publicacionId: 0,
+    };
+
+    const obtenerUsuario = { $unwind: '$usuario' };
+
+    const eliminarCamposInnecesarios = {
+      $project: {
+        usuarioObjectId: 0,
+        usuarioId: 0,
+        publicacionId: 0,
+        eliminado: 0,
+        __v: 0,
+        usuario: {
+          _id: 0,
+          email: 0,
+          password: 0,
+          createdAt: 0,
+          descripcion: 0,
           eliminado: 0,
           __v: 0,
-          usuario: {
-            _id: 0,
-            email: 0,
-            password: 0,
-            createdAt: 0,
-            descripcion: 0,
-            eliminado: 0,
-            __v: 0,
-          },
         },
       },
-    ]);
+    };
+
+    agregacion.push(
+      match,
+      buscarDatosUsuario,
+      obtenerUsuario,
+      eliminarCamposInnecesarios,
+    );
+
+    const comentarios = await this.comentarioModel.aggregate(agregacion);
 
     return comentarios;
   }
