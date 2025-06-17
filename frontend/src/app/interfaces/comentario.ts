@@ -1,6 +1,8 @@
+import { Usuario } from './usuario';
+
 export interface Comentario {
+  _id: string;
   fecha: number;
-  nombreUsuario: string;
-  urlThumbnail: string;
-  mensaje: string;
+  contenido: string;
+  usuario: Usuario;
 }

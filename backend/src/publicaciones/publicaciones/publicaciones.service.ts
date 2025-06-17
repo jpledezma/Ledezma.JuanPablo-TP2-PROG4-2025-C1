@@ -48,7 +48,6 @@ export class PublicacionesService {
           usuario: {
             _id: 0,
             email: 0,
-            username: 0,
             password: 0,
             createdAt: 0,
             descripcion: 0,

@@ -2,7 +2,7 @@
     <div class="header-publicacion">
         <div class="usuario">
             <img [src]="this.publicacion()?.usuario?.urlFotoThumbnail" alt="foto-usuario">
-            <span>{{`${this.publicacion()?.usuario?.nombre} ${this.publicacion()?.usuario?.apellido}`}}</span>
+            <span>{{`${this.publicacion()?.usuario?.nombre} ${this.publicacion()?.usuario?.apellido}` | titlecase}}</span>
         </div>
         <span class="fecha">{{this.publicacion()?.fecha | date:'dd/MM/yyyy - HH:mm'}}</span>
     </div>
@@ -42,12 +42,20 @@
         @for (comentario of this.comentarios; track $index) {
             <div class="comentario">
                 <div class="usuario">
-                    <img [src]="comentario.urlThumbnail" alt="foto-perfil">
-                    <span>{{comentario.nombreUsuario}}</span>
+                    <img [src]="comentario.usuario.urlFotoThumbnail" alt="foto-perfil">
+                    <span [style]="this.authService.usuario.username === comentario.usuario.username ? 'color: var(--secondary-color);' : ''">
+                        {{`${comentario.usuario.nombre} ${comentario.usuario.apellido}` | titlecase}}
+                    </span>
                     <span class="fecha">{{comentario.fecha | date:'dd/MM/yyyy - HH:mm'}}</span>
+                    @if (this.authService.usuario.username === comentario.usuario.username) {
+                        <i class="icon-bin"></i>
+                    }
                 </div>
-                <p>{{comentario.mensaje}}</p>
+                <p>{{comentario.contenido}}</p>
             </div>
+        }
+        @empty {
+            <p style="margin-left: 1rem; font-size: 2rem;">No hay comentarios</p>
         }
     }
 </div>

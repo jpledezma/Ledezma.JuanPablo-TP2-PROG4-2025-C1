@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { Comentario } from '../interfaces/comentario';
 
 @Injectable({
   providedIn: 'root',
@@ -55,6 +56,37 @@ export class PublicacionesService {
       firstValueFrom(peticion);
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async traerComentarios(publicacionId: string) {
+    const peticion = this.httpClient.get(
+      `${this.url}/comentarios/${publicacionId}`,
+    );
+    try {
+      const respuesta = await firstValueFrom(peticion);
+      return (respuesta as any).payload;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+
+  async enviarComentario(comentario: {
+    usuarioId: string;
+    publicacionId: string;
+    contenido: string;
+  }) {
+    const peticion = this.httpClient.post(
+      `${this.url}/comentarios`,
+      comentario,
+    );
+    try {
+      const respuesta = await firstValueFrom(peticion);
+      return (respuesta as any).payload;
+    } catch (error) {
+      console.log(error);
+      return null;
     }
   }
 }

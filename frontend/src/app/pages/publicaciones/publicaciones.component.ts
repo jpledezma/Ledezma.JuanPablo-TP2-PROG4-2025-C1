@@ -23,6 +23,7 @@ export class PublicacionesComponent implements OnInit {
     const usuario = {
       nombre: 'Isaac',
       apellido: 'Newton',
+      username: 'inewton',
       urlFotoPerfil: '',
       urlFotoThumbnail:
         'https://avatars.githubusercontent.com/u/75924747?s=40&v=4',
