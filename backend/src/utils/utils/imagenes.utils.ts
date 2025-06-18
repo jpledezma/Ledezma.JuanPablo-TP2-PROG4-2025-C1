@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { createHash } from 'crypto';
 import { SupabaseService } from '../../supabase/supabase.service';
+import * as sharp from 'sharp';
+// import sharp from 'sharp'; esta no funciona, así que uso la de arriba
 
 @Injectable()
 export class ImagenesUtils {
@@ -18,8 +20,9 @@ export class ImagenesUtils {
       .digest('base64url');
 
     hash = hash.slice(0, 8); // con 8 caracteres me basta
+    const timestamp = Date.now();
+    const nuevoNombre = `${timestamp}.${hash}.${extension}`;
 
-    const nuevoNombre = `${Date.now()}.${hash}.${extension}`;
     imagen.originalname = nuevoNombre;
 
     const data = await this.supabaseService.guardarImagen(
@@ -29,14 +32,24 @@ export class ImagenesUtils {
       carpeta,
     );
 
-    if (crearThumbnail) {
-      // generar un thumbanil
-    }
-
     const url = this.supabaseService.obtenerUrl(data?.path, carpeta);
-
     const urlImagen = url.data.publicUrl;
-    const urlThumbail = url.data.publicUrl;
+
+    let urlThumbail: string | undefined;
+
+    if (crearThumbnail) {
+      const thumbnail = await sharp(imagen.buffer).resize(64, 64).toBuffer();
+      const nombreThumbnail = `${timestamp}.${hash}.thumbnail.${extension}`;
+      const data = await this.supabaseService.guardarImagen(
+        thumbnail,
+        nombreThumbnail,
+        extension,
+        'thumbnails',
+      );
+
+      const url = this.supabaseService.obtenerUrl(data?.path, 'thumbnails');
+      urlThumbail = url.data.publicUrl;
+    }
 
     return { urlImagen, urlThumbail };
   }
