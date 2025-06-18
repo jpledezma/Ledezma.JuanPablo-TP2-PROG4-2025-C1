@@ -82,8 +82,12 @@ export class PublicacionesService {
     return publicacion;
   }
 
-  update(id: number, publicacion: UpdatePublicacionDto) {
-    return `This action updates a #${id} publicacion`;
+  async update(id: Types.ObjectId, publicacion: UpdatePublicacionDto) {
+    const actualizado = await this.publicacionModel.updateOne(
+      { _id: id },
+      publicacion,
+    );
+    return actualizado;
   }
 
   async remove(id: Types.ObjectId) {

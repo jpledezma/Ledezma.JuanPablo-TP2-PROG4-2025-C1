@@ -82,11 +82,31 @@ export class PublicacionesController {
   }
 
   @Patch('publicacion/:id')
-  update(
+  async update(
     @Param('id') id: string,
-    @Body() updatePublicacioneDto: UpdatePublicacionDto,
+    @Body() publicacionDto: UpdatePublicacionDto,
   ) {
-    return this.publicacionesService.update(+id, updatePublicacioneDto);
+    let encontrado = 0;
+    try {
+      const objectId = new ObjectId(id);
+      const actualizado = await this.publicacionesService.update(
+        objectId,
+        publicacionDto,
+      );
+      encontrado = actualizado.matchedCount;
+    } catch (error) {
+      //console.log(error);
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+    }
+
+    if (encontrado !== 0) {
+      return { payload: 'updated' };
+    } else {
+      throw new HttpException(
+        'Publicacion no encontrada',
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 
   @Delete('publicacion/:id')

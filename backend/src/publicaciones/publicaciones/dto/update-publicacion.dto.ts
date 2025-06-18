@@ -1,7 +1,11 @@
-import { OmitType } from '@nestjs/mapped-types';
-import { CreatePublicacionDto } from './create-publicacion.dto';
+import { IsOptional, IsString } from 'class-validator';
 
-export class UpdatePublicacionDto extends OmitType(CreatePublicacionDto, [
-  'usuarioId',
-  'urlImagen',
-]) {}
+export class UpdatePublicacionDto {
+  @IsOptional()
+  @IsString()
+  titulo: string;
+
+  @IsOptional()
+  @IsString()
+  contenido: string;
+}
