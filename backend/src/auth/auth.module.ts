@@ -4,13 +4,14 @@ import { UsuarioService } from '../usuario/usuario.service';
 import { AuthService } from './auth.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Usuario, UsuarioSchema } from '../usuario/entities/usuario.entity';
-import { SupabaseService } from '../supabase/supabase.service';
+import { UtilsModule } from '../utils/utils.module';
 
 @Module({
-  providers: [UsuarioService, AuthService, SupabaseService],
+  providers: [UsuarioService, AuthService],
   controllers: [AuthController],
   imports: [
     MongooseModule.forFeature([{ name: Usuario.name, schema: UsuarioSchema }]),
+    UtilsModule,
   ],
 })
 export class AuthModule {}

@@ -16,15 +16,14 @@ import { CreateUsuarioDto } from '../usuario/dto/create-usuario.dto';
 import { UsuarioService } from '../usuario/usuario.service';
 import { AuthService } from './auth.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { SupabaseService } from '../supabase/supabase.service';
-import { createHash } from 'crypto';
+import { ImagenesUtils } from '../utils/utils/imagenes.utils';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly usuarioService: UsuarioService,
     private readonly authService: AuthService,
-    private readonly supabaseService: SupabaseService,
+    private readonly imgUtils: ImagenesUtils,
   ) {}
 
   @Post('registro')
@@ -41,30 +40,16 @@ export class AuthController {
     fotoPerfil?: Express.Multer.File,
   ) {
     if (fotoPerfil) {
-      const nombreSeparado = fotoPerfil.originalname.split('.');
-      const extension = nombreSeparado[nombreSeparado.length - 1];
-      let hash = createHash('md5')
-        .update(fotoPerfil.originalname)
-        .digest('base64url');
-      hash = hash.slice(0, 8); // con 8 caracteres me basta
-      const nuevoNombre = `${Date.now()}.${hash}.${extension}`;
-      fotoPerfil.originalname = nuevoNombre;
-
-      const data = await this.supabaseService.guardarImagen(
-        fotoPerfil.buffer,
-        nuevoNombre,
-        extension,
+      const urls = await this.imgUtils.guardarImagen(
+        fotoPerfil,
         'fotos-perfil',
+        true,
       );
 
-      const url = this.supabaseService.obtenerUrl(data?.path, 'fotos-perfil');
-
-      usuarioDto.urlFotoPerfil = url.data.publicUrl;
-      usuarioDto.urlFotoThumbnail = url.data.publicUrl;
-      // esto podria ser un middleware
+      usuarioDto.urlFotoPerfil = urls.urlImagen;
+      usuarioDto.urlFotoThumbnail = urls.urlThumbail;
     }
-    const salt = 12;
-    const hash = await bcrypt.hash(usuarioDto.password, salt);
+    const hash = await bcrypt.hash(usuarioDto.password, 12);
     usuarioDto.password = hash;
 
     try {

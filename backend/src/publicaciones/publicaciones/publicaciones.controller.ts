@@ -19,17 +19,16 @@ import { CreatePublicacionDto } from './dto/create-publicacion.dto';
 import { UpdatePublicacionDto } from './dto/update-publicacion.dto';
 import { ObjectId } from 'mongodb';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { createHash } from 'crypto';
-import { SupabaseService } from '../../supabase/supabase.service';
 import { LogueadoGuard } from '../../guards/logueado/logueado.guard';
 import { Throttle } from '@nestjs/throttler';
+import { ImagenesUtils } from '../../utils/utils/imagenes.utils';
 
 @UseGuards(LogueadoGuard)
 @Controller('publicaciones')
 export class PublicacionesController {
   constructor(
     private readonly publicacionesService: PublicacionesService,
-    private readonly supabaseService: SupabaseService,
+    private readonly imgUtils: ImagenesUtils,
   ) {}
 
   @Post()
@@ -47,25 +46,8 @@ export class PublicacionesController {
     imagen?: Express.Multer.File,
   ) {
     if (imagen) {
-      const nombreSeparado = imagen.originalname.split('.');
-      const extension = nombreSeparado[nombreSeparado.length - 1];
-      let hash = createHash('md5')
-        .update(imagen.originalname)
-        .digest('base64url');
-      hash = hash.slice(0, 8); // con 8 caracteres me basta
-      const nuevoNombre = `${Date.now()}.${hash}.${extension}`;
-      imagen.originalname = nuevoNombre;
-
-      const data = await this.supabaseService.guardarImagen(
-        imagen.buffer,
-        nuevoNombre,
-        extension,
-        'publicaciones',
-      );
-
-      const url = this.supabaseService.obtenerUrl(data?.path, 'publicaciones');
-
-      publicacion.urlImagen = url.data.publicUrl;
+      const urls = await this.imgUtils.guardarImagen(imagen, 'publicaciones');
+      publicacion.urlImagen = urls.urlImagen;
     }
 
     const pCreada = await this.publicacionesService.create(publicacion);
