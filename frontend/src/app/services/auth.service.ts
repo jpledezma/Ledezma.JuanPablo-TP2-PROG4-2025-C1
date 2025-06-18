@@ -2,16 +2,21 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  httpClient = inject(HttpClient);
-  url: string;
-  token: string | null;
+  private httpClient = inject(HttpClient);
+  private url: string;
+  private token: string | null;
   usuario?: any;
   logueado: boolean;
+  private timerLogout?: any; //NodeJS.Timeout; no sé por qué no funciona...
+  private timerAviso?: any; //NodeJS.Timeout;
+  router = inject(Router);
 
   constructor() {
     this.url = environment.url + 'auth/';
@@ -59,6 +64,9 @@ export class AuthService {
     this.token = null;
     this.logueado = false;
     this.usuario = undefined;
+    clearTimeout(this.timerLogout);
+    clearTimeout(this.timerAviso);
+    this.router.navigateByUrl('/login');
   }
 
   async comprobarToken() {
@@ -74,7 +82,7 @@ export class AuthService {
         this.logueado = true;
         // En serio typescript?
         let id = (respuesta as any)['id'] as string;
-        this.leerUsuario(id);
+        await this.leerUsuario(id); // en realidad no hace falta el await, pero por las dudas
       }
     } catch (err) {
       console.log(err);
@@ -92,5 +100,60 @@ export class AuthService {
       this.logueado = false;
       this.usuario = undefined;
     }
+  }
+
+  private async refrescarToken() {
+    const peticion = this.httpClient.get(this.url + 'refresh-token');
+    try {
+      const respuesta = await firstValueFrom(peticion);
+      this.token = (respuesta as any)['payload'] as string;
+      localStorage.setItem('jwt-token', this.token);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  private iniciarTimerLogout() {
+    this.timerLogout = setTimeout(() => {
+      this.cerrarSesion();
+    }, 1000 * 60 * 15);
+  }
+
+  private reiniciarTimers() {
+    this.refrescarToken();
+    clearTimeout(this.timerLogout);
+    clearTimeout(this.timerAviso);
+    this.iniciarTimerAviso();
+  }
+
+  iniciarTimerAviso() {
+    this.iniciarTimerLogout();
+    this.timerAviso = setTimeout(() => {
+      this.preguntarExtenderTiempo();
+    }, 1000 * 60 * 10);
+  }
+
+  private preguntarExtenderTiempo() {
+    Swal.fire({
+      icon: 'warning',
+      text: 'La sesión finalizará en 5 minutos. ¿Desea extender el tiempo?',
+      theme: 'dark',
+      width: '50rem',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Extender tiempo',
+      timer: 1000 * 5,
+      customClass: {
+        title: 'modal-titulo',
+        htmlContainer: 'modal-texto',
+        icon: 'modal-icono',
+        confirmButton: 'modal-boton',
+        cancelButton: 'modal-boton-cancelar',
+      },
+    }).then((resultado) => {
+      if (resultado.isConfirmed) {
+        this.reiniciarTimers();
+      }
+    });
   }
 }

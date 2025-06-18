@@ -64,6 +64,8 @@ export class LoginComponent {
       });
       return;
     }
+
+    this.authService.iniciarTimerAviso();
     this.router.navigateByUrl('/inicio');
   }
 }

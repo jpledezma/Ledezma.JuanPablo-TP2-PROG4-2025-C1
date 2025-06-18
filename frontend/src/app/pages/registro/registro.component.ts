@@ -109,6 +109,7 @@ export class RegistroComponent {
     const exito: any = await this.authService.registrar(formData);
 
     if (exito) {
+      this.authService.iniciarTimerAviso();
       this.router.navigateByUrl('/inicio');
     } else {
       Swal.fire({

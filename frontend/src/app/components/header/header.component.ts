@@ -10,9 +10,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class HeaderComponent {
   authService = inject(AuthService);
-  router = inject(Router);
   cerrarSesion() {
     this.authService.cerrarSesion();
-    this.router.navigateByUrl('login');
   }
 }

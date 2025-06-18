@@ -82,8 +82,10 @@ a {
   line-height: 2.6rem;
 }
 
-button {
-  padding: 1.2rem 1.5rem;
+button,
+.modal-boton,
+.modal-boton-cancelar {
+  padding: 1rem 1.5rem;
   font-size: 1.6rem;
   font-weight: bold;
   border-radius: 12.5px;
@@ -92,7 +94,9 @@ button {
   color: var(--text-color);
 }
 
-button:hover {
+button:hover,
+.modal-boton:hover,
+.modal-boton-cancelar:hover {
   background-color: var(--bg-color);
   color: var(--text-color-emphasis);
   border: 2px solid var(--secondary-color);
@@ -172,13 +176,12 @@ button:disabled {
   font-size: 1.6rem;
 }
 
-.modal-boton {
-  padding: 1rem 2rem;
-  font-size: 1.6rem;
-  border: 2px solid var(--primary-color);
-  background-color: #000;
-  color: var(--text-color);
-  border-radius: 10px;
+.modal-boton-cancelar {
+  border: 2px solid #990707;
+}
+
+.modal-boton-cancelar:hover {
+  border: 2px solid #d30909;
 }
 
 .icon-thumb-down:before {
