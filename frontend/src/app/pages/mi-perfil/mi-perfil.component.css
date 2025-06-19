@@ -1,0 +1,70 @@
+.container {
+  min-width: 80rem;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 3rem;
+  background-color: rgba(89, 89, 89, 0.25);
+}
+
+.card-usuario {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5rem;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  position: relative;
+}
+
+.info-usuario {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.foto-perfil-container {
+  border: 2px solid var(--primary-color);
+  width: 15rem;
+  height: 15rem;
+  border-radius: 40px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000;
+}
+
+.foto-perfil-container img {
+  width: 15rem;
+}
+
+.nombre {
+  display: flex;
+  flex-direction: column;
+  font-size: 2.2rem;
+  gap: 0.5rem;
+}
+
+.nombre .username {
+  color: var(--secondary-color);
+  font-size: 1.8rem;
+}
+
+.fecha-inicio {
+  padding: 1rem;
+  width: fit-content;
+  margin-left: auto;
+  align-self: flex-start;
+  font-size: 1.4rem;
+  text-align: center;
+}
+.descripcion p {
+  margin-top: 1rem;
+  font-size: 1.8rem;
+}
+
+.publicaciones {
+  margin-top: 3rem;
+}

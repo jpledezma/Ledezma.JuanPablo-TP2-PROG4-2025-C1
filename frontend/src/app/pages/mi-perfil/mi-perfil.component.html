@@ -1,2 +1,31 @@
 <app-header></app-header>
-<p>mi-perfil works!</p>
+<div class="container">
+  <div class="card-usuario">
+
+    <div class="info-usuario">
+      <div class="foto-perfil-container">
+        <img [src]="usuario.urlFotoPerfil" alt="foto-perfil">
+      </div>
+      <div class="nombre">
+        <span>{{`${this.usuario.nombre} ${this.usuario.apellido}` | titlecase}}</span>
+        <span class="username">{{this.usuario.username}}</span>
+      </div>
+      <span class="fecha-inicio">Miembro desde: <br> {{this.usuario.createdAt | date:"dd/MM/yyyy"}}</span>
+    </div>
+
+    <div class="descripcion">
+      <h2>Sobre mí</h2>
+      <p>{{this.usuario.descripcion}}</p>
+    </div>
+  </div>
+
+  <div class="publicaciones">
+    @for (publicacion of this.publicaciones; track $index) {
+    <app-publicacion [publicacion]="publicacion"></app-publicacion>
+    }
+    @empty {
+    <p>No hay publicaciones para mostrar</p>
+    }
+  </div>
+
+</div>

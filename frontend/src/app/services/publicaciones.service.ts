@@ -17,9 +17,13 @@ export class PublicacionesService {
     this.publicaciones = [];
   }
 
-  async traerPublicaciones() {
+  async traerPublicaciones(usuarioId?: string) {
     let data;
-    const peticion = this.httpClient.get(this.url);
+    let urlPeticion = this.url;
+    if (usuarioId) {
+      urlPeticion += `/usuario/${usuarioId}`;
+    }
+    const peticion = this.httpClient.get(urlPeticion);
 
     try {
       const respuesta = await firstValueFrom(peticion);

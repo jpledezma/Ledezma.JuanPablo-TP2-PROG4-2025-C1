@@ -116,7 +116,7 @@ export class AuthService {
   private iniciarTimerLogout() {
     this.timerLogout = setTimeout(() => {
       this.cerrarSesion();
-    }, 1000 * 60 * 1.5);
+    }, 1000 * 60 * 15);
   }
 
   private reiniciarTimers() {
@@ -130,7 +130,7 @@ export class AuthService {
     this.iniciarTimerLogout();
     this.timerAviso = setTimeout(() => {
       this.preguntarExtenderTiempo();
-    }, 1000 * 60 * 1);
+    }, 1000 * 60 * 10);
   }
 
   private preguntarExtenderTiempo() {
@@ -142,7 +142,7 @@ export class AuthService {
       showCancelButton: true,
       cancelButtonText: 'Cancelar',
       confirmButtonText: 'Extender tiempo',
-      timer: 1000 * 60 * 1.5,
+      timer: 1000 * 60 * 15,
       customClass: {
         title: 'modal-titulo',
         htmlContainer: 'modal-texto',
