@@ -25,7 +25,7 @@ export class PublicacionesService {
     return guardado;
   }
 
-  async findAll(offset?: number, limit?: number, usuarioId?: string) {
+  async findAll(offset?: number, limit?: number, usuarioId?: Types.ObjectId) {
     const agregacion: any[] = [];
     const match: any = { $match: { eliminado: false } };
     if (usuarioId) {

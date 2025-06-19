@@ -61,6 +61,18 @@ export class PublicacionesController {
     return { payload: publicaciones };
   }
 
+  @Get('/usuario/:id')
+  async findByUser(@Param('id') id: string) {
+    const objectId = new ObjectId(id);
+    const publicaciones = await this.publicacionesService.findAll(
+      0,
+      3,
+      objectId,
+    );
+
+    return { payload: publicaciones };
+  }
+
   @Get('publicacion/:id')
   async findOne(@Param('id') id: string) {
     let resultado;
