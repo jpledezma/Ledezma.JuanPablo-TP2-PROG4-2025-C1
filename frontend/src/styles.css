@@ -241,12 +241,15 @@ button:disabled {
 .icon-eye-blocked:before {
   content: '\e9d1';
 }
-.icon-circle-up:before {
-  content: '\ea41';
+.icon-arrow-up:before {
+  content: '\ea32';
 }
 .icon-add-outline:before {
   content: '\e908';
 }
 .icon-dots-three-vertical:before {
   content: '\e907';
+}
+.icon-pencil:before {
+  content: '\e90a';
 }

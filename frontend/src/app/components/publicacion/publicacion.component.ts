@@ -135,6 +135,40 @@ export class PublicacionComponent implements OnInit {
       });
     }
   }
+
+  async eliminarPublicacion() {
+    const exito = await this.publicacionService.eliminarPublicacion(
+      this.publicacion()?._id!,
+    );
+
+    if (exito) {
+      Swal.fire({
+        icon: 'success',
+        text: 'Se eliminó tu publicación',
+        theme: 'dark',
+        width: '50rem',
+        customClass: {
+          title: 'modal-titulo',
+          htmlContainer: 'modal-texto',
+          icon: 'modal-icono',
+          confirmButton: 'modal-boton',
+        },
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        text: 'No se pudo eliminar la publicación',
+        theme: 'dark',
+        width: '50rem',
+        customClass: {
+          title: 'modal-titulo',
+          htmlContainer: 'modal-texto',
+          icon: 'modal-icono',
+          confirmButton: 'modal-boton',
+        },
+      });
+    }
+  }
 }
 
 /*

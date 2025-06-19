@@ -8,6 +8,17 @@
   position: relative;
 }
 
+.opciones {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 1rem;
+}
+
+.opciones button {
+  padding: 0.75rem;
+}
+
 .publicacion .header-publicacion {
   width: 100%;
   font-size: 1.2rem;

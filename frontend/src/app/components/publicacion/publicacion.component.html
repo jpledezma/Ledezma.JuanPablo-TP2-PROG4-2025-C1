@@ -1,4 +1,10 @@
 <div class="publicacion">
+    @if (this.authService.usuario.username === publicacion()?.usuario?.username) {
+    <div class="opciones">
+        <button> <i class="icon-pencil"></i></button>
+        <button (click)="eliminarPublicacion()"> <i class="icon-bin"></i></button>
+    </div>
+    }
     <div class="header-publicacion">
         <div class="usuario">
             <img [src]="this.publicacion()?.usuario?.urlFotoThumbnail" alt="foto-usuario">
@@ -41,15 +47,18 @@
         </div>
         @for (comentario of this.comentarios; track $index) {
             <div class="comentario">
+                @if (this.authService.usuario.username === comentario.usuario.username) {
+                    <div class="opciones">
+                        <button> <i class="icon-pencil"></i></button>
+                        <button> <i class="icon-bin"></i></button>
+                    </div>
+                }
                 <div class="usuario">
                     <img [src]="comentario.usuario.urlFotoThumbnail" alt="foto-perfil">
                     <span [style]="this.authService.usuario.username === comentario.usuario.username ? 'color: var(--secondary-color);' : ''">
                         {{`${comentario.usuario.nombre} ${comentario.usuario.apellido}` | titlecase}}
                     </span>
                     <span class="fecha">{{comentario.fecha | date:'dd/MM/yyyy - HH:mm'}}</span>
-                    @if (this.authService.usuario.username === comentario.usuario.username) {
-                        <i class="icon-bin"></i>
-                    }
                 </div>
                 <p>{{comentario.contenido}}</p>
             </div>

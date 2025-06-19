@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Comentario } from '../interfaces/comentario';
 
 @Injectable({
   providedIn: 'root',
@@ -91,6 +90,22 @@ export class PublicacionesService {
     } catch (error) {
       console.log(error);
       return null;
+    }
+  }
+
+  async eliminarComentario(comentarioId: string) {
+    //
+  }
+
+  async eliminarPublicacion(publicacionId: string) {
+    const url = `${this.url}/publicacion/${publicacionId}`;
+    const peticion = this.httpClient.delete(url);
+    try {
+      await firstValueFrom(peticion);
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
     }
   }
 }
