@@ -3,7 +3,7 @@ import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Usuario } from './entities/usuario.entity';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class UsuarioService {
@@ -42,11 +42,19 @@ export class UsuarioService {
     return usuario;
   }
 
-  update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
-    return `This action updates a #${id} usuario`;
+  async update(id: Types.ObjectId, updateUsuarioDto: UpdateUsuarioDto) {
+    const resultado = await this.usuarioModel.updateOne(
+      { _id: id },
+      updateUsuarioDto,
+    );
+    return resultado;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} usuario`;
+  async remove(id: Types.ObjectId) {
+    const resultado = await this.usuarioModel.updateOne(
+      { _id: id },
+      { eliminado: true },
+    );
+    return resultado;
   }
 }
