@@ -43,7 +43,7 @@ export class AuthController {
       const urls = await this.imgUtils.guardarImagen(
         fotoPerfil,
         'fotos-perfil',
-        true,
+        false, // esto es por el deploy, deberia ser true
       );
 
       usuarioDto.urlFotoPerfil = urls.urlImagen;

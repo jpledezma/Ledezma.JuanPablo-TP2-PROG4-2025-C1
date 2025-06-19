@@ -35,7 +35,7 @@ export class ImagenesUtils {
     const url = this.supabaseService.obtenerUrl(data?.path, carpeta);
     const urlImagen = url.data.publicUrl;
 
-    let urlThumbail: string | undefined;
+    let urlThumbail: string;
 
     if (crearThumbnail) {
       const thumbnail = await sharp(imagen.buffer).resize(64, 64).toBuffer();
@@ -49,6 +49,8 @@ export class ImagenesUtils {
 
       const url = this.supabaseService.obtenerUrl(data?.path, 'thumbnails');
       urlThumbail = url.data.publicUrl;
+    } else {
+      urlThumbail = urlImagen;
     }
 
     return { urlImagen, urlThumbail };
