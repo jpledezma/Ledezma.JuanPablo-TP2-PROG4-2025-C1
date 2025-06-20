@@ -6,10 +6,17 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { PublicacionesService } from '../../services/publicaciones.service';
 import Swal from 'sweetalert2';
+import { CrearPublicacionComponent } from '../crear-publicacion/crear-publicacion.component';
 
 @Component({
   selector: 'app-publicacion',
-  imports: [DatePipe, NgStyle, FormsModule, TitleCasePipe],
+  imports: [
+    DatePipe,
+    NgStyle,
+    FormsModule,
+    TitleCasePipe,
+    CrearPublicacionComponent,
+  ],
   templateUrl: './publicacion.component.html',
   styleUrl: './publicacion.component.css',
 })
@@ -22,6 +29,7 @@ export class PublicacionComponent implements OnInit {
   mensaje: string = '';
   authService = inject(AuthService);
   publicacionService = inject(PublicacionesService);
+  mostrarModificarPublicacion: boolean = false;
 
   ngOnInit(): void {
     const usuarioId = this.authService.usuario._id;
@@ -168,6 +176,18 @@ export class PublicacionComponent implements OnInit {
         },
       });
     }
+  }
+
+  modificarPublicacion() {
+    this.mostrarModificarPublicacion = true;
+  }
+
+  cerrarModificar(publicacionModificada: Publicacion | null) {
+    if (publicacionModificada) {
+      this.publicacion()!.contenido = publicacionModificada.contenido;
+      this.publicacion()!.titulo = publicacionModificada.titulo;
+    }
+    this.mostrarModificarPublicacion = false;
   }
 }
 

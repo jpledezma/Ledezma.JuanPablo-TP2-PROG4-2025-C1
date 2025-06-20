@@ -1,7 +1,7 @@
 <div class="publicacion">
     @if (this.authService.usuario.username === publicacion()?.usuario?.username) {
     <div class="opciones">
-        <button> <i class="icon-pencil"></i></button>
+        <button (click)="modificarPublicacion()" >  <i class="icon-pencil"></i></button>
         <button (click)="eliminarPublicacion()"> <i class="icon-bin"></i></button>
     </div>
     }
@@ -68,3 +68,7 @@
         }
     }
 </div>
+
+@if (this.mostrarModificarPublicacion) {
+    <app-crear-publicacion (cerrarForm)="cerrarModificar($event)" [publicacionModificada]="this.publicacion()"></app-crear-publicacion>
+}

@@ -118,4 +118,20 @@ export class PublicacionesService {
       return false;
     }
   }
+
+  async modificarPublicacion(
+    publicacionId: string,
+    titulo: string,
+    contenido: string,
+  ) {
+    const url = `${this.url}/publicacion/${publicacionId}`;
+    const peticion = this.httpClient.patch(url, { titulo, contenido });
+    try {
+      await firstValueFrom(peticion);
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
 }

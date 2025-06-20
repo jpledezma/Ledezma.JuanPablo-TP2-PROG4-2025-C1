@@ -1,4 +1,12 @@
-import { Component, inject, OnDestroy, output } from '@angular/core';
+import {
+  Component,
+  inject,
+  input,
+  InputSignal,
+  OnDestroy,
+  OnInit,
+  output,
+} from '@angular/core';
 import {
   FormGroup,
   FormControl,
@@ -18,8 +26,9 @@ import { Publicacion } from '../../interfaces/publicacion';
   templateUrl: './crear-publicacion.component.html',
   styleUrl: './crear-publicacion.component.css',
 })
-export class CrearPublicacionComponent implements OnDestroy {
+export class CrearPublicacionComponent implements OnDestroy, OnInit {
   cerrarForm = output<Publicacion | null>();
+  publicacionModificada: InputSignal<Publicacion | undefined> = input();
   service = inject(PublicacionesService);
   auth = inject(AuthService);
   formulario: FormGroup;
@@ -30,11 +39,23 @@ export class CrearPublicacionComponent implements OnDestroy {
     this.formulario = new FormGroup({
       titulo: new FormControl('', [Validators.required]),
       contenido: new FormControl('', [Validators.required]),
-      imagen: new FormControl('', [Validators.required]),
+      imagen: new FormControl(''),
     });
 
     // bloquear scroll
     document.body.style.overflow = 'hidden';
+  }
+
+  ngOnInit(): void {
+    if (this.publicacionModificada()) {
+      this.formulario.controls['contenido'].setValue(
+        this.publicacionModificada()!.contenido,
+      );
+
+      this.formulario.controls['titulo'].setValue(
+        this.publicacionModificada()!.titulo,
+      );
+    }
   }
 
   ngOnDestroy(): void {
@@ -55,6 +76,28 @@ export class CrearPublicacionComponent implements OnDestroy {
   }
 
   async publicar() {
+    if (
+      this.formulario.value.titulo.trim() == '' ||
+      this.formulario.value.contenido.trim() == ''
+    ) {
+      Swal.fire({
+        icon: 'error',
+        text: 'Debe completar todos los campos',
+        theme: 'dark',
+        width: '50rem',
+        customClass: {
+          htmlContainer: 'modal-texto',
+          confirmButton: 'modal-boton',
+        },
+      });
+      return;
+    }
+
+    if (this.publicacionModificada()) {
+      this.guardarCambios();
+      return;
+    }
+
     const formData = new FormData();
     formData.append('usuarioId', this.auth.usuario._id);
     formData.append('titulo', this.formulario.value.titulo.trim());
@@ -101,6 +144,50 @@ export class CrearPublicacionComponent implements OnDestroy {
         urlFotoThumbnail: this.auth.usuario.urlFotoThumbnail,
       };
       this.cerrarForm.emit(publicacionCreada);
+    }
+  }
+
+  async guardarCambios() {
+    this.enEspera = true;
+
+    const exito = await this.service.modificarPublicacion(
+      this.publicacionModificada()?._id!,
+      this.formulario.value.titulo.trim(),
+      this.formulario.value.contenido.trim(),
+    );
+
+    this.enEspera = false;
+
+    if (!exito) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo modificar tu publicación',
+        theme: 'dark',
+        width: '50rem',
+        customClass: {
+          htmlContainer: 'modal-texto',
+          confirmButton: 'modal-boton',
+        },
+      });
+    } else {
+      Swal.fire({
+        icon: 'success',
+        text: 'Se modificó tu publicación',
+        theme: 'dark',
+        width: '50rem',
+        customClass: {
+          htmlContainer: 'modal-texto',
+          confirmButton: 'modal-boton',
+        },
+      });
+
+      this.publicacionModificada()!.titulo =
+        this.formulario.value.titulo.trim();
+      this.publicacionModificada()!.contenido =
+        this.formulario.value.contenido.trim();
+
+      this.cerrarForm.emit(this.publicacionModificada()!);
     }
   }
 }

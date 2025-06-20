@@ -3,14 +3,16 @@
         <form [formGroup]="this.formulario">
             <input formControlName="titulo" type="text" placeholder="Título">
             <textarea formControlName="contenido" placeholder="Contenido"></textarea>
-            <div>
-                <label for="imagen">Imagen:</label>
-                <input formControlName="imagen" (change)="seleccionarArchivo($event)" id="imagen" type="file" accept="image/png, image/jpeg">
-                <button (click)="cancelarImagen()" id="cancelar-imagen" [disabled]="this.enEspera">Borrar archivo</button>
-            </div>
+            @if (!this.publicacionModificada()) {
+                <div>
+                    <label for="imagen">Imagen:</label>
+                    <input formControlName="imagen" (change)="seleccionarArchivo($event)" id="imagen" type="file" accept="image/png, image/jpeg">
+                    <button (click)="cancelarImagen()" id="cancelar-imagen" [disabled]="this.enEspera">Borrar archivo</button>
+                </div>
+            }
     
             <div class="botones">
-                <button (click)="publicar()" [disabled]="this.enEspera">Publicar</button>
+                <button (click)="publicar()" [disabled]="this.enEspera">{{this.publicacionModificada() ? 'Modificar' : 'Publicar'}}</button>
                 <button (click)="salir()" [disabled]="this.enEspera">Cancelar</button>
             </div>
         </form>
