@@ -14,6 +14,7 @@ import {
   MaxFileSizeValidator,
   UseGuards,
   Query,
+  Headers,
 } from '@nestjs/common';
 import { PublicacionesService } from './publicaciones.service';
 import { CreatePublicacionDto } from './dto/create-publicacion.dto';
@@ -62,11 +63,11 @@ export class PublicacionesController {
   async findAll(
     @Query('offset') paramOffset: number,
     @Query('limit') paramLimit: number,
-    @Query('user_id') paramUserId: string,
+    @Query('user_id') paramUsuarioId: string,
   ) {
     let offset: number | undefined;
     let limit: number | undefined;
-    let userId: ObjectId | undefined;
+    let usuarioId: ObjectId | undefined;
 
     if (paramOffset !== undefined && paramLimit !== undefined) {
       if (isNaN(paramOffset) || isNaN(paramLimit)) {
@@ -84,9 +85,9 @@ export class PublicacionesController {
         );
       }
     }
-    if (paramUserId !== undefined) {
+    if (paramUsuarioId !== undefined) {
       try {
-        userId = new ObjectId(paramUserId);
+        usuarioId = new ObjectId(paramUsuarioId);
       } catch (error) {
         throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
       }
@@ -95,7 +96,7 @@ export class PublicacionesController {
     const publicaciones = await this.publicacionesService.findAll(
       offset,
       limit,
-      userId,
+      usuarioId,
     );
     return { payload: publicaciones };
   }
@@ -124,22 +125,28 @@ export class PublicacionesController {
   async update(
     @Param('id') id: string,
     @Body() publicacionDto: UpdatePublicacionDto,
+    @Headers() headers: any,
   ) {
-    let encontrado = 0;
+    let resultado;
+    const token = headers.authorization.split(' ')[1];
+    const decodificado = this.authSesrvice.leerToken(token);
+
     try {
-      const objectId = new ObjectId(id);
-      const actualizado = await this.publicacionesService.update(
-        objectId,
+      const usuarioId = new ObjectId((decodificado as any).id);
+      const acceso = (decodificado as any).admin;
+      const publicacionId = new ObjectId(id);
+      resultado = await this.publicacionesService.update(
+        publicacionId,
         publicacionDto,
+        usuarioId,
+        acceso === 'admin',
       );
-      encontrado = actualizado.matchedCount;
     } catch (error) {
-      //console.log(error);
       throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     }
 
-    if (encontrado !== 0) {
-      return { payload: 'updated' };
+    if (resultado.matchedCount !== 0) {
+      return { payload: { actualizado: true } };
     } else {
       throw new HttpException(
         'Publicacion no encontrada',
@@ -149,17 +156,26 @@ export class PublicacionesController {
   }
 
   @Delete('publicacion/:id')
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string, @Headers() headers: any) {
     let resultado;
+    const token = headers.authorization.split(' ')[1];
+    const decodificado = this.authSesrvice.leerToken(token);
+
     try {
-      const objectId = new ObjectId(id);
-      resultado = await this.publicacionesService.remove(objectId);
+      const usuarioId = new ObjectId((decodificado as any).id);
+      const acceso = (decodificado as any).admin;
+      const publicacionId = new ObjectId(id);
+      resultado = await this.publicacionesService.remove(
+        publicacionId,
+        usuarioId,
+        acceso === 'admin',
+      );
     } catch (error) {
       throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     }
 
-    if (resultado) {
-      return { payload: resultado };
+    if (resultado.matchedCount !== 0) {
+      return { payload: { deleted: true } };
     } else {
       throw new HttpException(
         'No se encontró la publicación',
@@ -170,27 +186,34 @@ export class PublicacionesController {
 
   @Throttle({ default: { limit: 3, ttl: 2000 } })
   @Post('/like')
-  async like(@Body() body: { usuarioId: string; publicacionId: string }) {
-    const { usuarioId, publicacionId } = body;
+  async like(@Body() body: { publicacionId: string }, @Headers() headers: any) {
+    const token = headers.authorization.split(' ')[1];
+    const decodificado = this.authSesrvice.leerToken(token);
     try {
+      const usuarioId = new ObjectId((decodificado as any).id);
+      const publicacionId = new ObjectId(body.publicacionId);
       await this.publicacionesService.darLike(usuarioId, publicacionId);
       return { payload: true };
     } catch (err) {
       console.log(err);
-      // internal server error
     }
   }
 
   @Throttle({ default: { limit: 3, ttl: 2000 } })
   @Post('/dislike')
-  async dislike(@Body() body: { usuarioId: string; publicacionId: string }) {
-    const { usuarioId, publicacionId } = body;
+  async dislike(
+    @Body() body: { publicacionId: string },
+    @Headers() headers: any,
+  ) {
+    const token = headers.authorization.split(' ')[1];
+    const decodificado = this.authSesrvice.leerToken(token);
     try {
+      const usuarioId = new ObjectId((decodificado as any).id);
+      const publicacionId = new ObjectId(body.publicacionId);
       await this.publicacionesService.darDislike(usuarioId, publicacionId);
       return { payload: true };
     } catch (err) {
       console.log(err);
-      // internal server error
     }
   }
 }

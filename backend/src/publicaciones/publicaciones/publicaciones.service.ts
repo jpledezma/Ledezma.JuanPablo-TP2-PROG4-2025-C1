@@ -82,73 +82,95 @@ export class PublicacionesService {
     return publicacion;
   }
 
-  async update(id: Types.ObjectId, publicacion: UpdatePublicacionDto) {
+  async update(
+    id: Types.ObjectId,
+    publicacion: UpdatePublicacionDto,
+    usuarioId: Types.ObjectId,
+    esAdmin: boolean = false,
+  ) {
+    const filtro = { _id: id };
+    if (!esAdmin) {
+      filtro['usuarioId'] = usuarioId;
+    }
     const actualizado = await this.publicacionModel.updateOne(
-      { _id: id },
+      filtro,
       publicacion,
     );
     return actualizado;
   }
 
-  async remove(id: Types.ObjectId) {
-    const eliminado = await this.publicacionModel.updateOne(
-      { _id: id },
-      { eliminado: true },
-    );
+  async remove(
+    id: Types.ObjectId,
+    usuarioId: Types.ObjectId,
+    esAdmin: boolean = false,
+  ) {
+    const filtro = { _id: id };
+    if (!esAdmin) {
+      filtro['usuarioId'] = usuarioId;
+    }
+    const eliminado = await this.publicacionModel.updateOne(filtro, {
+      eliminado: true,
+    });
     return eliminado;
   }
 
-  async darLike(usuarioId: string, publicacionId: string) {
+  async darLike(usuarioId: Types.ObjectId, publicacionId: Types.ObjectId) {
     const liked = await this.comprobarLike(usuarioId, publicacionId);
 
     if (liked) {
       await this.publicacionModel.updateOne(
-        { _id: new Types.ObjectId(publicacionId) },
-        { $pull: { likes: new Types.ObjectId(usuarioId) } },
+        { _id: publicacionId },
+        { $pull: { likes: usuarioId } },
       );
     } else {
       await this.publicacionModel.updateOne(
-        { _id: new Types.ObjectId(publicacionId) },
+        { _id: publicacionId },
         {
-          $push: { likes: new Types.ObjectId(usuarioId) },
-          $pull: { dislikes: new Types.ObjectId(usuarioId) },
+          $push: { likes: usuarioId },
+          $pull: { dislikes: usuarioId },
         },
       );
     }
   }
 
-  async darDislike(usuarioId: string, publicacionId: string) {
+  async darDislike(usuarioId: Types.ObjectId, publicacionId: Types.ObjectId) {
     const disliked = await this.comprobarDislike(usuarioId, publicacionId);
 
     if (disliked) {
       await this.publicacionModel.updateOne(
-        { _id: new Types.ObjectId(publicacionId) },
-        { $pull: { dislikes: new Types.ObjectId(usuarioId) } },
+        { _id: publicacionId },
+        { $pull: { dislikes: usuarioId } },
       );
     } else {
       await this.publicacionModel.updateOne(
-        { _id: new Types.ObjectId(publicacionId) },
+        { _id: publicacionId },
         {
-          $push: { dislikes: new Types.ObjectId(usuarioId) },
-          $pull: { likes: new Types.ObjectId(usuarioId) },
+          $push: { dislikes: usuarioId },
+          $pull: { likes: usuarioId },
         },
       );
     }
   }
 
-  private async comprobarLike(usuarioId: string, publicacionId: string) {
+  private async comprobarLike(
+    usuarioId: Types.ObjectId,
+    publicacionId: Types.ObjectId,
+  ) {
     const encontrado = await this.publicacionModel.findOne({
-      _id: new Types.ObjectId(publicacionId),
-      likes: new Types.ObjectId(usuarioId),
+      _id: publicacionId,
+      likes: usuarioId,
     });
 
     return encontrado !== null;
   }
 
-  private async comprobarDislike(usuarioId: string, publicacionId: string) {
+  private async comprobarDislike(
+    usuarioId: Types.ObjectId,
+    publicacionId: Types.ObjectId,
+  ) {
     const encontrado = await this.publicacionModel.findOne({
-      _id: new Types.ObjectId(publicacionId),
-      dislikes: new Types.ObjectId(usuarioId),
+      _id: publicacionId,
+      dislikes: usuarioId,
     });
 
     return encontrado !== null;
