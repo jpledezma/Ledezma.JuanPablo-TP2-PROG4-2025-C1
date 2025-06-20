@@ -9,7 +9,7 @@
         </select>
         <button (click)="this.crearPublicacion()">Crear publicación</button>
     </nav>
-    @for (publicacion of this.publicaciones; track $index) {
+    @for (publicacion of this.publicaciones; track publicacion._id) {
         <app-publicacion [publicacion]="publicacion"></app-publicacion>
     }
     @empty {
