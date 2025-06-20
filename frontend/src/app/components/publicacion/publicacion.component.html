@@ -16,8 +16,8 @@
     <h3>{{this.publicacion()?.titulo}}</h3>
 
     @if (this.publicacion()?.urlImagen) {
-        <div class="image-container">
-            <div class="image-background" [style.background-image]="`url(${this.publicacion()?.urlImagen})`"></div>
+        <div class="image-container" [style.background-image]="`url(${this.publicacion()?.urlImagen})`">
+            <div class="image-background"></div>
             <img src="{{this.publicacion()?.urlImagen}}" alt="imagen-publicacion">
         </div>
     }
