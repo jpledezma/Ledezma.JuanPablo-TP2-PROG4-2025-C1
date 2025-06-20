@@ -13,6 +13,7 @@ import {
   ParseFilePipe,
   MaxFileSizeValidator,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { PublicacionesService } from './publicaciones.service';
 import { CreatePublicacionDto } from './dto/create-publicacion.dto';
@@ -22,6 +23,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { LogueadoGuard } from '../../guards/logueado/logueado.guard';
 import { Throttle } from '@nestjs/throttler';
 import { ImagenesUtils } from '../../utils/utils/imagenes.utils';
+import { AuthService } from 'src/auth/auth.service';
 
 @UseGuards(LogueadoGuard)
 @Controller('publicaciones')
@@ -29,6 +31,7 @@ export class PublicacionesController {
   constructor(
     private readonly publicacionesService: PublicacionesService,
     private readonly imgUtils: ImagenesUtils,
+    private readonly authSesrvice: AuthService,
   ) {}
 
   @Post()
@@ -56,20 +59,44 @@ export class PublicacionesController {
   }
 
   @Get()
-  async findAll() {
-    const publicaciones = await this.publicacionesService.findAll();
-    return { payload: publicaciones };
-  }
+  async findAll(
+    @Query('offset') paramOffset: number,
+    @Query('limit') paramLimit: number,
+    @Query('user_id') paramUserId: string,
+  ) {
+    let offset: number | undefined;
+    let limit: number | undefined;
+    let userId: ObjectId | undefined;
 
-  @Get('/usuario/:id')
-  async findByUser(@Param('id') id: string) {
-    const objectId = new ObjectId(id);
+    if (paramOffset !== undefined && paramLimit !== undefined) {
+      if (isNaN(paramOffset) || isNaN(paramLimit)) {
+        throw new HttpException(
+          'offset y limit deben ser números',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      offset = +paramOffset;
+      limit = +paramLimit;
+      if (limit > 10) {
+        throw new HttpException(
+          'limit debe ser menor o igual a 10',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    }
+    if (paramUserId !== undefined) {
+      try {
+        userId = new ObjectId(paramUserId);
+      } catch (error) {
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      }
+    }
+
     const publicaciones = await this.publicacionesService.findAll(
-      0,
-      3,
-      objectId,
+      offset,
+      limit,
+      userId,
     );
-
     return { payload: publicaciones };
   }
 
@@ -84,7 +111,7 @@ export class PublicacionesController {
     }
 
     if (resultado) {
-      return resultado;
+      return { payload: resultado };
     } else {
       throw new HttpException(
         'No se encontró la publicación',

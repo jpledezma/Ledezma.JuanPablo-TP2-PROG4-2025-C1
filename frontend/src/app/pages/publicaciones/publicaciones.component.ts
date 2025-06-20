@@ -4,6 +4,7 @@ import { PublicacionComponent } from '../../components/publicacion/publicacion.c
 import { Publicacion } from '../../interfaces/publicacion';
 import { CrearPublicacionComponent } from '../../components/crear-publicacion/crear-publicacion.component';
 import { PublicacionesService } from '../../services/publicaciones.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-publicaciones',
@@ -15,6 +16,9 @@ export class PublicacionesComponent implements OnInit {
   publicaciones: Publicacion[] = [];
   mostrarCrearPublicacion: boolean = false;
   service = inject(PublicacionesService);
+  offset: number = 0;
+  limit: number = 10;
+  quedanPublicacionesPorTraer = true;
 
   async ngOnInit() {
     await this.traerPublicaciones();
@@ -33,13 +37,43 @@ export class PublicacionesComponent implements OnInit {
   }
 
   async traerPublicaciones() {
-    let publicacionesTraidas = await this.service.traerPublicaciones();
+    if (!this.quedanPublicacionesPorTraer) {
+      return;
+    }
+
+    const publicacionesTraidas = await this.service.traerPublicaciones(
+      this.offset,
+      this.limit,
+    );
+
     if (publicacionesTraidas === null) {
+      this.quedanPublicacionesPorTraer = false;
       return;
     }
 
     for (const publicacion of publicacionesTraidas) {
       this.publicaciones.push(publicacion);
+    }
+
+    this.offset += publicacionesTraidas.length;
+
+    if (publicacionesTraidas.length < this.limit) {
+      this.quedanPublicacionesPorTraer = false;
+    }
+
+    if (publicacionesTraidas.length === 0) {
+      Swal.fire({
+        icon: 'info',
+        text: 'No quedan publicaciones para mostrar',
+        theme: 'dark',
+        width: '50rem',
+        customClass: {
+          title: 'modal-titulo',
+          htmlContainer: 'modal-texto',
+          icon: 'modal-icono',
+          confirmButton: 'modal-boton',
+        },
+      });
     }
   }
 

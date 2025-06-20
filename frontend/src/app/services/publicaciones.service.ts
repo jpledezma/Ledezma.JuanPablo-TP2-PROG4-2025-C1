@@ -16,11 +16,21 @@ export class PublicacionesService {
     this.publicaciones = [];
   }
 
-  async traerPublicaciones(usuarioId?: string) {
+  async traerPublicaciones(
+    offset?: number,
+    limit?: number,
+    usuarioId?: string,
+  ) {
     let data;
-    let urlPeticion = this.url;
-    if (usuarioId) {
-      urlPeticion += `/usuario/${usuarioId}`;
+    let urlPeticion = this.url + '?';
+    if (usuarioId !== undefined) {
+      urlPeticion += `user_id=${usuarioId}&`;
+    }
+    if (offset !== undefined) {
+      urlPeticion += `offset=${offset}&`;
+    }
+    if (limit !== undefined) {
+      urlPeticion += `limit=${limit}&`;
     }
     const peticion = this.httpClient.get(urlPeticion);
 

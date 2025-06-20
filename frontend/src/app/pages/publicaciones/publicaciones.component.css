@@ -50,3 +50,8 @@
   border-color: var(--primary-color-dark);
   background-color: transparent;
 }
+
+#traer-mas {
+  display: block;
+  margin: 0 auto;
+}

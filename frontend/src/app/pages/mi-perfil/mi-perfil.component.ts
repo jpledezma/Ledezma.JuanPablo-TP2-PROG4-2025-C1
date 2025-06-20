@@ -28,7 +28,11 @@ export class MiPerfilComponent implements OnInit {
 
   async ngOnInit() {
     const publicacionesTraidas =
-      await this.publicacionesService.traerPublicaciones(this.usuario._id);
+      await this.publicacionesService.traerPublicaciones(
+        0,
+        3,
+        this.usuario._id,
+      );
     for (const publicacion of publicacionesTraidas) {
       this.publicaciones.push(publicacion);
     }

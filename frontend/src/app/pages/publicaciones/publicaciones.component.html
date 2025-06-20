@@ -15,6 +15,11 @@
     @empty {
         <p>No hay publicaciones para mostrar</p>
     }
+    @if (this.publicaciones.length > 0) {
+        <button (click)="traerPublicaciones()" [style.display]="quedanPublicacionesPorTraer ? '' : 'none'" id="traer-mas">
+            Cargar más
+        </button>
+    }
     <button id="volver-arriba" (click)="volverArriba()"><i class="icon-arrow-up"></i></button>
 </div>
 
