@@ -45,12 +45,12 @@
             <textarea [(ngModel)]="this.mensaje" placeholder="Escribe un comentario"></textarea>
             <button (click)="this.enviarComentario()" >Enviar</button>
         </div>
-        @for (comentario of this.comentarios; track $index) {
+        @for (comentario of this.comentarios; track comentario._id) {
             <div class="comentario">
                 @if (this.authService.usuario.username === comentario.usuario.username) {
                     <div class="opciones">
-                        <button> <i class="icon-pencil"></i></button>
-                        <button> <i class="icon-bin"></i></button>
+                        <button (click)="abrirModificarComentario(comentario)"> <i class="icon-pencil"></i></button>
+                        <button (click)="eliminarComentario(comentario, $index)"> <i class="icon-bin"></i></button>
                     </div>
                 }
                 <div class="usuario">
@@ -70,5 +70,15 @@
 </div>
 
 @if (this.mostrarModificarPublicacion) {
-    <app-crear-publicacion (cerrarForm)="cerrarModificar($event)" [publicacionModificada]="this.publicacion()"></app-crear-publicacion>
+    <app-crear-publicacion (cerrarForm)="cerrarModificarPublicacion($event)" [publicacionModificada]="this.publicacion()"></app-crear-publicacion>
+}
+
+@if (this.mostrarModificarComentario) {
+    <div class="modificar-container">
+        <textarea [(ngModel)]="this.contenidoComentarioModificado"></textarea>
+        <div>
+            <button (click)="modificarComentario()">Modificar</button>
+            <button (click)="cerrarModificarComentario()" class="modal-boton-cancelar">Cancelar</button>
+        </div>
+    </div>
 }

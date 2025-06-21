@@ -30,6 +30,10 @@ export class PublicacionComponent implements OnInit {
   authService = inject(AuthService);
   publicacionService = inject(PublicacionesService);
   mostrarModificarPublicacion: boolean = false;
+  mostrarModificarComentario: boolean = false;
+  contenidoComentarioModificado = '';
+  idComentarioModificado = '';
+  indiceComentarioModificado?: number;
 
   ngOnInit(): void {
     const usuarioId = this.authService.usuario._id;
@@ -129,52 +133,24 @@ export class PublicacionComponent implements OnInit {
       } as Comentario);
       this.mensaje = '';
     } else {
-      Swal.fire({
-        icon: 'error',
-        text: 'No se pudo enviar el comentario',
-        theme: 'dark',
-        width: '50rem',
-        customClass: {
-          title: 'modal-titulo',
-          htmlContainer: 'modal-texto',
-          icon: 'modal-icono',
-          confirmButton: 'modal-boton',
-        },
-      });
+      this.mostrarMensajeError('comentario', 'enviar');
     }
   }
 
   async eliminarPublicacion() {
+    const confirmado = await this.mostrarMensajePreguntaEliminar('publicacion');
+    if (!confirmado) {
+      return;
+    }
+
     const exito = await this.publicacionService.eliminarPublicacion(
       this.publicacion()?._id!,
     );
 
     if (exito) {
-      Swal.fire({
-        icon: 'success',
-        text: 'Se eliminó tu publicación',
-        theme: 'dark',
-        width: '50rem',
-        customClass: {
-          title: 'modal-titulo',
-          htmlContainer: 'modal-texto',
-          icon: 'modal-icono',
-          confirmButton: 'modal-boton',
-        },
-      });
+      this.mostrarMensajeExito('publicacion', 'eliminó');
     } else {
-      Swal.fire({
-        icon: 'error',
-        text: 'No se pudo eliminar la publicación',
-        theme: 'dark',
-        width: '50rem',
-        customClass: {
-          title: 'modal-titulo',
-          htmlContainer: 'modal-texto',
-          icon: 'modal-icono',
-          confirmButton: 'modal-boton',
-        },
-      });
+      this.mostrarMensajeError('publicacion', 'eliminar');
     }
   }
 
@@ -182,12 +158,114 @@ export class PublicacionComponent implements OnInit {
     this.mostrarModificarPublicacion = true;
   }
 
-  cerrarModificar(publicacionModificada: Publicacion | null) {
+  cerrarModificarPublicacion(publicacionModificada: Publicacion | null) {
     if (publicacionModificada) {
       this.publicacion()!.contenido = publicacionModificada.contenido;
       this.publicacion()!.titulo = publicacionModificada.titulo;
     }
     this.mostrarModificarPublicacion = false;
+  }
+
+  async eliminarComentario(comentario: Comentario, indice: number) {
+    const confirmado = await this.mostrarMensajePreguntaEliminar('comentario');
+    if (!confirmado) {
+      return;
+    }
+    const exito = await this.publicacionService.eliminarComentario(
+      comentario._id,
+    );
+
+    if (exito) {
+      this.mostrarMensajeExito('comentario', 'eliminó');
+      this.comentarios?.splice(indice, 1);
+    } else {
+      this.mostrarMensajeError('comentario', 'eliminar');
+    }
+  }
+
+  abrirModificarComentario(comentario: Comentario) {
+    this.indiceComentarioModificado = this.comentarios?.indexOf(comentario);
+    this.idComentarioModificado = comentario._id;
+    this.contenidoComentarioModificado = comentario.contenido;
+    this.mostrarModificarComentario = true;
+  }
+
+  cerrarModificarComentario() {
+    this.idComentarioModificado = '';
+    this.mostrarModificarComentario = false;
+  }
+
+  async modificarComentario() {
+    const exito = await this.publicacionService.modificarComentario(
+      this.idComentarioModificado,
+      this.contenidoComentarioModificado,
+    );
+
+    if (exito) {
+      this.mostrarMensajeExito('comentario', 'modificó');
+      this.comentarios![this.indiceComentarioModificado!].contenido =
+        this.contenidoComentarioModificado;
+    } else {
+      this.mostrarMensajeError('comentario', 'modificar');
+    }
+    this.cerrarModificarComentario();
+  }
+
+  mostrarMensajeError(
+    objetivo: 'publicacion' | 'comentario',
+    accion: 'eliminar' | 'modificar' | 'enviar',
+  ) {
+    Swal.fire({
+      icon: 'error',
+      text: `No se pudo ${accion} tu ${objetivo}`,
+      theme: 'dark',
+      width: '50rem',
+      customClass: {
+        title: 'modal-titulo',
+        htmlContainer: 'modal-texto',
+        icon: 'modal-icono',
+        confirmButton: 'modal-boton',
+      },
+    });
+  }
+
+  mostrarMensajeExito(
+    objetivo: 'publicacion' | 'comentario',
+    accion: 'eliminó' | 'modificó',
+  ) {
+    Swal.fire({
+      icon: 'success',
+      text: `Se ${accion} tu ${objetivo}`,
+      theme: 'dark',
+      width: '50rem',
+      customClass: {
+        title: 'modal-titulo',
+        htmlContainer: 'modal-texto',
+        icon: 'modal-icono',
+        confirmButton: 'modal-boton',
+      },
+    });
+  }
+
+  async mostrarMensajePreguntaEliminar(objetivo: 'publicacion' | 'comentario') {
+    const resultado = await Swal.fire({
+      icon: 'question',
+      text: `Seguro que quieres eliminar tu ${objetivo}`,
+      theme: 'dark',
+      width: '50rem',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: `Eliminar ${objetivo}`,
+      customClass: {
+        title: 'modal-titulo',
+        htmlContainer: 'modal-texto',
+        icon: 'modal-icono',
+        confirmButton: 'modal-boton',
+        cancelButton: 'modal-boton-cancelar',
+      },
+    });
+
+    return resultado.isConfirmed;
   }
 }
 

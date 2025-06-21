@@ -103,10 +103,6 @@ export class PublicacionesService {
     }
   }
 
-  async eliminarComentario(comentarioId: string) {
-    //
-  }
-
   async eliminarPublicacion(publicacionId: string) {
     const url = `${this.url}/publicacion/${publicacionId}`;
     const peticion = this.httpClient.delete(url);
@@ -126,6 +122,30 @@ export class PublicacionesService {
   ) {
     const url = `${this.url}/publicacion/${publicacionId}`;
     const peticion = this.httpClient.patch(url, { titulo, contenido });
+    try {
+      await firstValueFrom(peticion);
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+
+  async eliminarComentario(comentarioId: string) {
+    const url = `${this.url}/comentarios/comentario/${comentarioId}`;
+    const peticion = this.httpClient.delete(url);
+    try {
+      await firstValueFrom(peticion);
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+
+  async modificarComentario(comentarioId: string, contenido: string) {
+    const url = `${this.url}/comentarios/comentario/${comentarioId}`;
+    const peticion = this.httpClient.patch(url, { contenido });
     try {
       await firstValueFrom(peticion);
       return true;

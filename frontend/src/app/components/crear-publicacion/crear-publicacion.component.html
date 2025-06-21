@@ -13,7 +13,7 @@
     
             <div class="botones">
                 <button (click)="publicar()" [disabled]="this.enEspera">{{this.publicacionModificada() ? 'Modificar' : 'Publicar'}}</button>
-                <button (click)="salir()" [disabled]="this.enEspera">Cancelar</button>
+                <button (click)="salir()" [disabled]="this.enEspera" class="modal-boton-cancelar">Cancelar</button>
             </div>
         </form>
     </div>

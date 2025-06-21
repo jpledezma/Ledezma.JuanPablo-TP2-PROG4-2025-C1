@@ -145,3 +145,36 @@
 .comentario .usuario {
   margin: 0 3rem;
 }
+
+.modificar-container {
+  width: 40rem;
+  max-height: 40rem;
+  padding: 2rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  background-color: rgba(0, 0, 0, 0.9);
+  border: 2px solid var(--primary-color-dark);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.modificar-container textarea {
+  height: 70%;
+  padding: 1rem;
+  max-width: 100%;
+  min-width: 100%;
+  outline: none;
+  border: none;
+  font-size: 1.6rem;
+  border-radius: 5px;
+}
+
+.modificar-container > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
