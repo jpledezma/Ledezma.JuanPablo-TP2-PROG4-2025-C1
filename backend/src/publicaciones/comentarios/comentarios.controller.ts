@@ -9,16 +9,22 @@ import {
   UseGuards,
   HttpException,
   HttpStatus,
+  Headers,
 } from '@nestjs/common';
 import { ComentariosService } from './comentarios.service';
 import { CreateComentarioDto } from './dto/create-comentario.dto';
 import { UpdateComentarioDto } from './dto/update-comentario.dto';
 import { LogueadoGuard } from '../../guards/logueado/logueado.guard';
+import { AuthService } from 'src/auth/auth.service';
+import { ObjectId } from 'mongodb';
 
 @UseGuards(LogueadoGuard)
 @Controller('publicaciones/comentarios')
 export class ComentariosController {
-  constructor(private readonly comentariosService: ComentariosService) {}
+  constructor(
+    private readonly comentariosService: ComentariosService,
+    private readonly authSesrvice: AuthService,
+  ) {}
 
   @Post()
   async create(@Body() comentarioDto: CreateComentarioDto) {
@@ -49,15 +55,64 @@ export class ComentariosController {
   }
 
   @Patch('comentario/:id')
-  update(
+  async update(
     @Param('id') id: string,
-    @Body() updateComentarioDto: UpdateComentarioDto,
+    @Body() comentarioDto: UpdateComentarioDto,
+    @Headers() headers: any,
   ) {
-    return this.comentariosService.update(+id, updateComentarioDto);
+    const token = headers.authorization.split(' ')[1];
+    const decodificado = this.authSesrvice.leerToken(token);
+
+    let resultado;
+
+    try {
+      const usuarioId = new ObjectId((decodificado as any).id as string);
+      const comentarioId = new ObjectId(id);
+      resultado = await this.comentariosService.update(
+        comentarioId,
+        comentarioDto,
+        usuarioId,
+      );
+    } catch (error) {
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+    }
+
+    if (resultado.matchedCount !== 0) {
+      return { payload: { actualizado: true } };
+    } else {
+      throw new HttpException(
+        'Publicacion no encontrada',
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 
   @Delete('comentario/:id')
-  remove(@Param('id') id: string) {
-    return this.comentariosService.remove(+id);
+  async remove(@Param('id') id: string, @Headers() headers: any) {
+    let resultado;
+    const token = headers.authorization.split(' ')[1];
+    const decodificado = this.authSesrvice.leerToken(token);
+
+    try {
+      const usuarioId = new ObjectId((decodificado as any).id as string);
+      const acceso = (decodificado as any).admin;
+      const comentarioId = new ObjectId(id);
+      resultado = await this.comentariosService.remove(
+        comentarioId,
+        usuarioId,
+        acceso === 'admin',
+      );
+    } catch (error) {
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+    }
+
+    if (resultado.matchedCount !== 0) {
+      return { payload: { deleted: true } };
+    } else {
+      throw new HttpException(
+        'No se encontró la publicación',
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 }

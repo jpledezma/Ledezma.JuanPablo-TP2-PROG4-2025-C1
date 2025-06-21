@@ -89,11 +89,30 @@ export class ComentariosService {
     return comentario;
   }
 
-  update(id: number, updateComentarioDto: UpdateComentarioDto) {
-    return `This action updates a #${id} comentario`;
+  async update(
+    id: Types.ObjectId,
+    comentario: UpdateComentarioDto,
+    usuarioId: Types.ObjectId,
+  ) {
+    const actualizado = await this.comentarioModel.updateOne(
+      { _id: id, usuarioId: usuarioId },
+      comentario,
+    );
+    return actualizado;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} comentario`;
+  async remove(
+    id: Types.ObjectId,
+    usuarioId: Types.ObjectId,
+    esAdmin: boolean = false,
+  ) {
+    const filtro = { _id: id };
+    if (!esAdmin) {
+      filtro['usuarioId'] = usuarioId;
+    }
+    const eliminado = await this.comentarioModel.updateOne(filtro, {
+      eliminado: true,
+    });
+    return eliminado;
   }
 }

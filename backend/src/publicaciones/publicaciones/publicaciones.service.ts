@@ -86,14 +86,9 @@ export class PublicacionesService {
     id: Types.ObjectId,
     publicacion: UpdatePublicacionDto,
     usuarioId: Types.ObjectId,
-    esAdmin: boolean = false,
   ) {
-    const filtro = { _id: id };
-    if (!esAdmin) {
-      filtro['usuarioId'] = usuarioId;
-    }
     const actualizado = await this.publicacionModel.updateOne(
-      filtro,
+      { _id: id, usuarioId: usuarioId },
       publicacion,
     );
     return actualizado;

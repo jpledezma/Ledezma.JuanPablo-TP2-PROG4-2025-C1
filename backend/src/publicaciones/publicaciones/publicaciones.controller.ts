@@ -24,7 +24,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { LogueadoGuard } from '../../guards/logueado/logueado.guard';
 import { Throttle } from '@nestjs/throttler';
 import { ImagenesUtils } from '../../utils/utils/imagenes.utils';
-import { AuthService } from 'src/auth/auth.service';
+import { AuthService } from '../../auth/auth.service';
 
 @UseGuards(LogueadoGuard)
 @Controller('publicaciones')
@@ -133,13 +133,11 @@ export class PublicacionesController {
 
     try {
       const usuarioId = new ObjectId((decodificado as any).id);
-      const acceso = (decodificado as any).admin;
       const publicacionId = new ObjectId(id);
       resultado = await this.publicacionesService.update(
         publicacionId,
         publicacionDto,
         usuarioId,
-        acceso === 'admin',
       );
     } catch (error) {
       throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
