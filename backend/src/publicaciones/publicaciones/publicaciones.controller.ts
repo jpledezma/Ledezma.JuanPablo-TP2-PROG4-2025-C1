@@ -78,9 +78,9 @@ export class PublicacionesController {
       }
       offset = +paramOffset;
       limit = +paramLimit;
-      if (limit > 10) {
+      if (limit > 100) {
         throw new HttpException(
-          'limit debe ser menor o igual a 10',
+          'limit debe ser menor o igual a 100',
           HttpStatus.BAD_REQUEST,
         );
       }
