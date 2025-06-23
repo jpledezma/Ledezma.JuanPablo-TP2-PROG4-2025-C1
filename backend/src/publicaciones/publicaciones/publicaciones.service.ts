@@ -66,6 +66,7 @@ export class PublicacionesService {
         titulo: 1,
         likes: 1,
         dislikes: 1,
+        contenido: 1,
         cantidadComentarios: 1,
         usuario: {
           nombre: 1,
