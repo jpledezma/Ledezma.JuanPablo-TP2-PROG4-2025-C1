@@ -9,4 +9,5 @@ export interface Publicacion {
   likes: string[];
   dislikes: string[];
   urlImagen?: string;
+  cantidadComentarios?: number;
 }

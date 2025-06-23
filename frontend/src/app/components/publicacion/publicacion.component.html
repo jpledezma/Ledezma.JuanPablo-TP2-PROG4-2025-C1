@@ -35,7 +35,7 @@
         </div>
         <div class="comentarios" (click)="this.mostrarComentarios()">
             <i class="icon-chat"></i>
-            <span>Comentarios</span>
+            <span>Comentarios ({{this.publicacion()!.cantidadComentarios || 0}})</span>
         </div>
     </div>
 

@@ -43,11 +43,28 @@ export class PublicacionesService {
 
     const obtenerUsuario = { $unwind: '$usuario' };
 
+    const buscarComentarios = {
+      $lookup: {
+        from: 'comentarios',
+        localField: '_id',
+        foreignField: 'publicacionId',
+        as: 'comentarios',
+        pipeline: [{ $match: { eliminado: false } }],
+      },
+    };
+
+    const agregarCantidadComentarios = {
+      $addFields: {
+        cantidadComentarios: { $size: '$comentarios' },
+      },
+    };
+
     const eliminarCamposInnecesarios = {
       $project: {
         usuarioId: 0,
         eliminado: 0,
         __v: 0,
+        comentarios: 0,
         usuario: {
           _id: 0,
           email: 0,
@@ -64,6 +81,8 @@ export class PublicacionesService {
       match,
       buscarDatosUsuario,
       obtenerUsuario,
+      buscarComentarios,
+      agregarCantidadComentarios,
       eliminarCamposInnecesarios,
     );
 
