@@ -53,21 +53,17 @@ export class ComentariosService {
 
     const obtenerUsuario = { $unwind: '$usuario' };
 
-    const eliminarCamposInnecesarios = {
+    const seleccionarCampos = {
       $project: {
-        usuarioObjectId: 0,
-        usuarioId: 0,
-        publicacionId: 0,
-        eliminado: 0,
-        __v: 0,
+        _id: 1,
+        fecha: 1,
+        contenido: 1,
         usuario: {
-          _id: 0,
-          email: 0,
-          password: 0,
-          createdAt: 0,
-          descripcion: 0,
-          eliminado: 0,
-          __v: 0,
+          nombre: 1,
+          apellido: 1,
+          username: 1,
+          urlFotoPerfil: 1,
+          urlFotoThumbnail: 1,
         },
       },
     };
@@ -76,7 +72,7 @@ export class ComentariosService {
       match,
       buscarDatosUsuario,
       obtenerUsuario,
-      eliminarCamposInnecesarios,
+      seleccionarCampos,
     );
 
     const comentarios = await this.comentarioModel.aggregate(agregacion);

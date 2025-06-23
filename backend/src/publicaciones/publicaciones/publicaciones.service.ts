@@ -59,31 +59,31 @@ export class PublicacionesService {
       },
     };
 
-    const eliminarCamposInnecesarios = {
+    const seleccionarCampos = {
       $project: {
-        usuarioId: 0,
-        eliminado: 0,
-        __v: 0,
-        comentarios: 0,
+        _id: 1,
+        fecha: 1,
+        titulo: 1,
+        likes: 1,
+        dislikes: 1,
+        cantidadComentarios: 1,
         usuario: {
-          _id: 0,
-          email: 0,
-          password: 0,
-          createdAt: 0,
-          descripcion: 0,
-          eliminado: 0,
-          __v: 0,
+          nombre: 1,
+          apellido: 1,
+          username: 1,
+          urlFotoPerfil: 1,
+          urlFotoThumbnail: 1,
         },
       },
     };
 
     agregacion.push(
       match,
-      buscarDatosUsuario,
-      obtenerUsuario,
       buscarComentarios,
       agregarCantidadComentarios,
-      eliminarCamposInnecesarios,
+      buscarDatosUsuario,
+      obtenerUsuario,
+      seleccionarCampos,
     );
 
     if (offset !== undefined && limit !== undefined) {
