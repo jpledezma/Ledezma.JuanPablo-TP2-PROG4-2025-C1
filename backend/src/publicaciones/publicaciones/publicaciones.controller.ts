@@ -32,7 +32,7 @@ export class PublicacionesController {
   constructor(
     private readonly publicacionesService: PublicacionesService,
     private readonly imgUtils: ImagenesUtils,
-    private readonly authSesrvice: AuthService,
+    private readonly authService: AuthService,
   ) {}
 
   @Post()
@@ -129,7 +129,7 @@ export class PublicacionesController {
   ) {
     let resultado;
     const token = headers.authorization.split(' ')[1];
-    const decodificado = this.authSesrvice.leerToken(token);
+    const decodificado = this.authService.leerToken(token);
 
     try {
       const usuarioId = new ObjectId((decodificado as any).id);
@@ -157,7 +157,7 @@ export class PublicacionesController {
   async remove(@Param('id') id: string, @Headers() headers: any) {
     let resultado;
     const token = headers.authorization.split(' ')[1];
-    const decodificado = this.authSesrvice.leerToken(token);
+    const decodificado = this.authService.leerToken(token);
 
     try {
       const usuarioId = new ObjectId((decodificado as any).id);
@@ -186,7 +186,7 @@ export class PublicacionesController {
   @Post('/like')
   async like(@Body() body: { publicacionId: string }, @Headers() headers: any) {
     const token = headers.authorization.split(' ')[1];
-    const decodificado = this.authSesrvice.leerToken(token);
+    const decodificado = this.authService.leerToken(token);
     try {
       const usuarioId = new ObjectId((decodificado as any).id);
       const publicacionId = new ObjectId(body.publicacionId);
@@ -204,7 +204,7 @@ export class PublicacionesController {
     @Headers() headers: any,
   ) {
     const token = headers.authorization.split(' ')[1];
-    const decodificado = this.authSesrvice.leerToken(token);
+    const decodificado = this.authService.leerToken(token);
     try {
       const usuarioId = new ObjectId((decodificado as any).id);
       const publicacionId = new ObjectId(body.publicacionId);
