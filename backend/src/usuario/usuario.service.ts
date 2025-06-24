@@ -23,22 +23,31 @@ export class UsuarioService {
   }
 
   async findAll() {
-    const usuarios = await this.usuarioModel.find(); // sacar eliminados
+    const usuarios = await this.usuarioModel.find({}, { password: 0 }); // sacar eliminados
     return usuarios;
   }
 
   async findById(id: string) {
-    const usuario = await this.usuarioModel.findOne({ _id: id });
+    const usuario = await this.usuarioModel.findOne(
+      { _id: id },
+      { password: 0 },
+    );
     return usuario;
   }
 
   async findByUsername(username: string) {
-    const usuario = await this.usuarioModel.findOne({ username: username });
+    const usuario = await this.usuarioModel.findOne(
+      { username: username },
+      { password: 0 },
+    );
     return usuario;
   }
 
   async findByEmail(email: string) {
-    const usuario = await this.usuarioModel.findOne({ email: email });
+    const usuario = await this.usuarioModel.findOne(
+      { email: email },
+      { password: 0 },
+    );
     return usuario;
   }
 

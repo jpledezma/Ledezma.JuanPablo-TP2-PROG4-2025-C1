@@ -40,6 +40,9 @@ export class Usuario {
   @Prop({ required: false, type: String, maxlength: 255 })
   descripcion?: string;
 
+  @Prop({ required: false, type: String, default: 'usuario' })
+  acceso?: string;
+
   @Prop({ required: true, type: Number })
   createdAt: number;
 

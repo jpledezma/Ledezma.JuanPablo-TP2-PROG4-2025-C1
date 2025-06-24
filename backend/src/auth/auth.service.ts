@@ -4,10 +4,11 @@ import { sign, verify } from 'jsonwebtoken';
 @Injectable()
 export class AuthService {
   constructor() {}
-  crearToken(id: any, username: string) {
+  crearToken(id: any, username: string, acceso?: string) {
     const payload = {
       id: id,
       username: username,
+      acceso: acceso || 'usuario',
       iat: Date.now() / 1000,
       exp: Date.now() / 1000 + 60 * 15,
     };

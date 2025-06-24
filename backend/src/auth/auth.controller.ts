@@ -52,12 +52,16 @@ export class AuthController {
     const hash = await bcrypt.hash(usuarioDto.password, 12);
     usuarioDto.password = hash;
 
+    // no vaya a ser que se me pase
+    (usuarioDto as any).acceso = undefined;
+
     try {
       usuarioDto.fechaNacimiento = +usuarioDto.fechaNacimiento;
       const usuarioCreado = await this.usuarioService.create(usuarioDto);
       const token = this.authService.crearToken(
         usuarioCreado._id,
         usuarioCreado.username,
+        usuarioCreado.acceso,
       );
 
       return { payload: token };
@@ -87,7 +91,11 @@ export class AuthController {
       );
     }
 
-    const token = this.authService.crearToken(usuario._id, usuario.username);
+    const token = this.authService.crearToken(
+      usuario._id,
+      usuario.username,
+      usuario.acceso,
+    );
 
     return { payload: token };
   }
@@ -119,7 +127,8 @@ export class AuthController {
 
     const id = verificado['id'];
     const username = verificado['username'];
-    const nuevoToken = this.authService.crearToken(id, username);
+    const acceso = verificado['acceso'];
+    const nuevoToken = this.authService.crearToken(id, username, acceso);
 
     return { payload: nuevoToken };
   }
