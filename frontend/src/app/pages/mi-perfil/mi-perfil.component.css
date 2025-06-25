@@ -60,6 +60,13 @@
   font-size: 1.4rem;
   text-align: center;
 }
+
+.info-usuario button {
+  position: absolute;
+  right: 2rem;
+  bottom: 2rem;
+}
+
 .descripcion p {
   margin-top: 1rem;
   font-size: 1.8rem;
@@ -67,4 +74,48 @@
 
 .publicaciones {
   margin-top: 3rem;
+}
+
+.modificar-container {
+  width: 60rem;
+  max-height: 60rem;
+  padding: 2rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  background-color: rgba(0, 0, 0, 0.9);
+  border: 2px solid var(--primary-color-dark);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.modificar-container label {
+  font-size: 1.6rem;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.modificar-container textarea,
+.modificar-container input {
+  padding: 0.75rem;
+  max-width: 100%;
+  min-width: 100%;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.6rem;
+}
+
+.modificar-container textarea {
+  max-height: 20rem;
+}
+
+.modificar-container .botones {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }

@@ -11,6 +11,7 @@
         <span class="username">{{this.usuario.username}}</span>
       </div>
       <span class="fecha-inicio">Miembro desde: <br> {{this.usuario.createdAt | date:"dd/MM/yyyy"}}</span>
+      <button (click)="modificarUsuario()"> <i class="icon-pencil"></i></button>
     </div>
 
     <div class="descripcion">
@@ -29,3 +30,24 @@
   </div>
 
 </div>
+
+@if (this.mostrarModificarUsuario) {
+<div class="modificar-container">
+  <div class="inputs">
+    <label for="nombre">Nombre:</label>
+    <input type="text" [(ngModel)]="this.usuarioModificado.nombre" id="nombre">
+  </div>
+  <div class="inputs">
+    <label for="apellido">Apellido:</label>
+    <input type="text" [(ngModel)]="this.usuarioModificado.apellido" id="apellido">
+  </div>
+  <div class="inputs">
+    <label for="descripcion">Descripción</label>
+    <textarea [(ngModel)]="this.usuarioModificado.descripcion" id="descripcion"></textarea>
+  </div>
+  <div class="botones">
+    <button (click)="aplicarCambiosUsuario()">Modificar</button>
+    <button (click)="cerrarModificarUsuario()" class="modal-boton-cancelar">Cancelar</button>
+  </div>
+</div>
+}
