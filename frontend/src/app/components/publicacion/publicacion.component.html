@@ -1,10 +1,13 @@
 <div class="publicacion">
-    @if (this.authService.usuario.username === publicacion()?.usuario?.username) {
     <div class="opciones">
-        <button (click)="modificarPublicacion()" >  <i class="icon-pencil"></i></button>
-        <button (click)="eliminarPublicacion()"> <i class="icon-bin"></i></button>
-    </div>
+    @if (this.authService.usuario.username === publicacion()?.usuario?.username) {
+        <button (click)="modificarPublicacion()" >  <i class="icon-pencil" title="Editar"></i></button>
+        <button (click)="eliminarPublicacion()"> <i class="icon-bin" title="Eliminar"></i></button>
     }
+    @if (this.authService.usuario.acceso === "admin") {
+        <button (click)="eliminarPublicacion()"> <i class="icon-blocked" title="Eliminar publicación"></i></button>
+    }
+    </div>
     <div class="header-publicacion">
         <div class="usuario">
             <img [src]="this.publicacion()?.usuario?.urlFotoThumbnail" alt="foto-usuario">

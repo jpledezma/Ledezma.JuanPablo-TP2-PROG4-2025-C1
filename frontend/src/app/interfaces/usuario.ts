@@ -5,4 +5,5 @@ export interface Usuario {
   urlFotoPerfil: string;
   urlFotoThumbnail: string;
   descripcion?: string;
+  acceso?: string;
 }
