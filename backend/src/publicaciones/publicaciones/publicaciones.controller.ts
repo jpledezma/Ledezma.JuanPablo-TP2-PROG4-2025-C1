@@ -161,7 +161,8 @@ export class PublicacionesController {
 
     try {
       const usuarioId = new ObjectId((decodificado as any).id);
-      const acceso = (decodificado as any).admin;
+      const acceso = (decodificado as any).acceso;
+
       const publicacionId = new ObjectId(id);
       resultado = await this.publicacionesService.remove(
         publicacionId,
