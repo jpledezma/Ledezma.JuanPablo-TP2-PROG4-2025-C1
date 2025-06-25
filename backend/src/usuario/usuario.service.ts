@@ -36,18 +36,12 @@ export class UsuarioService {
   }
 
   async findByUsername(username: string) {
-    const usuario = await this.usuarioModel.findOne(
-      { username: username },
-      { password: 0 },
-    );
+    const usuario = await this.usuarioModel.findOne({ username: username });
     return usuario;
   }
 
   async findByEmail(email: string) {
-    const usuario = await this.usuarioModel.findOne(
-      { email: email },
-      { password: 0 },
-    );
+    const usuario = await this.usuarioModel.findOne({ email: email });
     return usuario;
   }
 

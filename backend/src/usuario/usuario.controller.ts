@@ -35,12 +35,19 @@ export class UsuarioController {
     return usuarios;
   }
 
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   @UseGuards(LogueadoGuard)
   @Get(':id')
-  async findById(@Param('id') id: string) {
-    const usuario = await this.usuarioService.findById(id);
-    return usuario;
+  async findById(@Param('id') id: string, @Headers() headers: any) {
+    const token = headers.authorization.split(' ')[1];
+    const decodificado: any = this.authService.leerToken(token);
+
+    if (decodificado.id === id || decodificado.acceso === 'admin') {
+      const usuario = await this.usuarioService.findById(id);
+      return usuario;
+    } else {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
   }
 
   @UseGuards(LogueadoGuard)
@@ -53,7 +60,7 @@ export class UsuarioController {
     const token = headers.authorization.split(' ')[1];
     const decodificado = this.authService.leerToken(token);
     if ((decodificado as any).id !== id) {
-      throw new HttpException('Bad request', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
 
     try {
