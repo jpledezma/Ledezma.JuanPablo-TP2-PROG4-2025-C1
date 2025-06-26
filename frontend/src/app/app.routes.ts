@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { sessionGuard } from './guards/session.guard';
 import { authGuard } from './guards/auth.guard';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -34,6 +35,19 @@ export const routes: Routes = [
       import('./pages/mi-perfil/mi-perfil.component').then(
         (modulo) => modulo.MiPerfilComponent,
       ),
+  },
+  {
+    path: 'administracion',
+    canActivate: [authGuard, adminGuard],
+    children: [
+      {
+        path: 'usuarios',
+        loadComponent: () =>
+          import('./pages/usuarios/usuarios.component').then(
+            (modulo) => modulo.UsuariosComponent,
+          ),
+      },
+    ],
   },
   {
     path: '',

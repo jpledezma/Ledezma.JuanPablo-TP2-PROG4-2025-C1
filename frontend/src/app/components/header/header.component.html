@@ -8,6 +8,10 @@
         </a>
 
         <div class="menu-usuario">
+            @if (this.authService.usuario.acceso === "admin") {
+                
+                <a routerLink="/administracion/usuarios">Usuarios</a>
+            }
             <a routerLink="/mi-perfil"> 
                 <img [src]="authService.usuario.urlFotoThumbnail" alt="foto-perfil"> 
                 Mi perfil

@@ -1,0 +1,46 @@
+<app-header></app-header>
+<h1>Administración de usuarios</h1>
+<section class="alta-usuario">
+  <h2>Alta de usuarios</h2>
+  <form [formGroup]="formulario">
+    <div class="input-wrapper">
+      <label for="nombre">Nombre</label>
+      <input formControlName="nombre" type="text" id="nombre" />
+    </div>
+  
+    <div class="input-wrapper">
+      <label for="apellido">Apellido</label>
+      <input formControlName="apellido" type="text" id="apellido" />
+    </div>
+  
+    <div class="input-wrapper">
+      <label for="username">
+        Nombre de usuario <span style="font-size: 1.2rem">(Min. 4 caracteres)</span>
+      </label>
+      <input formControlName="username" type="text" id="username" />
+    </div>
+  
+    <div class="input-wrapper">
+      <label for="fechaNacimiento">Fecha de nacimiento</label>
+      <input formControlName="fechaNacimiento" type="date" id="fechaNacimiento" />
+    </div>
+  
+    <div class="input-wrapper">
+      <label for="email">Email</label>
+      <input formControlName="email" type="text" id="email" />
+    </div>
+  
+    <div class="input-wrapper">
+      <label for="pass">Contraseña</label>
+      <input formControlName="pass" type="password" id="pass" />
+    </div>
+
+    <div class="form-buttons">
+      <button (click)="guardarUsuario()">Guardar</button>
+    </div>
+  </form>
+</section>
+
+<section class="busqueda-usuarios">
+
+</section>
