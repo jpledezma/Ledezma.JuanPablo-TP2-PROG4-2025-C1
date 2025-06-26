@@ -12,10 +12,11 @@ import {
   ParseFilePipe,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { isValidObjectId } from 'mongoose';
+import { AuthService } from './auth.service';
 import { CreateUsuarioDto } from '../usuario/dto/create-usuario.dto';
 import { UsuarioService } from '../usuario/usuario.service';
-import { AuthService } from './auth.service';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { ImagenesUtils } from '../utils/utils/imagenes.utils';
 
 @Controller('auth')

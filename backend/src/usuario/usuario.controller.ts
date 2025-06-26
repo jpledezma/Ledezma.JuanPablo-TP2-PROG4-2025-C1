@@ -11,11 +11,11 @@ import {
   HttpStatus,
   Headers,
 } from '@nestjs/common';
+import { Types } from 'mongoose';
 import { UsuarioService } from './usuario.service';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { GetPublicUsuarioDto } from './dto/get-public-usuario.dto';
 import { LogueadoGuard } from '../guards/logueado/logueado.guard';
-import { Types } from 'mongoose';
 import { AuthService } from '../auth/auth.service';
 import { AdminGuard } from '../guards/admin/admin.guard';
 

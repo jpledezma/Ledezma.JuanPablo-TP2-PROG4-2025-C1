@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
 import { CreatePublicacionDto } from './dto/create-publicacion.dto';
 import { UpdatePublicacionDto } from './dto/update-publicacion.dto';
-import { InjectModel } from '@nestjs/mongoose';
 import { Publicacion } from './entities/publicacion.entity';
-import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class PublicacionesService {

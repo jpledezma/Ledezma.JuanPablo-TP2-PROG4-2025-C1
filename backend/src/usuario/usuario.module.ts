@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import { UsuarioService } from './usuario.service';
 import { UsuarioController } from './usuario.controller';
-import { MongooseModule } from '@nestjs/mongoose';
 import { Usuario, UsuarioSchema } from './entities/usuario.entity';
 import { AuthService } from '../auth/auth.service';
 

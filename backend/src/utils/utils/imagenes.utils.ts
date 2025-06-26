@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { createHash } from 'crypto';
-import { SupabaseService } from '../../supabase/supabase.service';
 import * as sharp from 'sharp';
 // import sharp from 'sharp'; esta no funciona, así que uso la de arriba
+import { SupabaseService } from '../../supabase/supabase.service';
 
 @Injectable()
 export class ImagenesUtils {
