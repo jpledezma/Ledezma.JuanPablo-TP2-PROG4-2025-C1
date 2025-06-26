@@ -13,7 +13,6 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { isValidObjectId } from 'mongoose';
 import { AuthService } from './auth.service';
 import { CreateUsuarioDto } from '../usuario/dto/create-usuario.dto';
 import { UsuarioService } from '../usuario/usuario.service';
@@ -56,19 +55,19 @@ export class AuthController {
     // no vaya a ser que se me pase
     (usuarioDto as any).acceso = undefined;
 
-    try {
-      usuarioDto.fechaNacimiento = +usuarioDto.fechaNacimiento;
-      const usuarioCreado = await this.usuarioService.create(usuarioDto);
-      const token = this.authService.crearToken(
-        usuarioCreado._id,
-        usuarioCreado.username,
-        usuarioCreado.acceso,
-      );
-
-      return { payload: token };
-    } catch (err) {
-      console.log(err);
+    if (isNaN(+usuarioDto.fechaNacimiento)) {
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     }
+
+    usuarioDto.fechaNacimiento = +usuarioDto.fechaNacimiento;
+    const usuarioCreado = await this.usuarioService.create(usuarioDto);
+    const token = this.authService.crearToken(
+      usuarioCreado._id,
+      usuarioCreado.username,
+      usuarioCreado.acceso,
+    );
+
+    return { payload: token };
   }
 
   @Post('login')
@@ -79,7 +78,6 @@ export class AuthController {
     }
 
     if (!usuario) {
-      console.log('no está che');
       throw new HttpException('El usuario no existe', HttpStatus.NOT_FOUND);
     }
 
@@ -110,7 +108,7 @@ export class AuthController {
       return { valido: false };
     } else {
       return {
-        valido: decodificado !== null,
+        valido: true,
         id: (decodificado as any).id,
       };
     }

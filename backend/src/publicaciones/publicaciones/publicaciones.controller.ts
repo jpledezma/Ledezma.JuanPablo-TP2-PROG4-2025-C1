@@ -19,6 +19,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Throttle } from '@nestjs/throttler';
 import { ObjectId } from 'mongodb';
+import { isValidObjectId } from 'mongoose';
 import { PublicacionesService } from './publicaciones.service';
 import { CreatePublicacionDto } from './dto/create-publicacion.dto';
 import { UpdatePublicacionDto } from './dto/update-publicacion.dto';
@@ -86,10 +87,10 @@ export class PublicacionesController {
       }
     }
     if (paramUsuarioId !== undefined) {
-      try {
+      if (!isValidObjectId(paramUsuarioId)) {
+        throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+      } else {
         usuarioId = new ObjectId(paramUsuarioId);
-      } catch (error) {
-        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
       }
     }
 
@@ -103,13 +104,11 @@ export class PublicacionesController {
 
   @Get('publicacion/:id')
   async findOne(@Param('id') id: string) {
-    let resultado;
-    try {
-      const objectId = new ObjectId(id);
-      resultado = await this.publicacionesService.findOne(objectId);
-    } catch (error) {
+    if (!isValidObjectId(id)) {
       throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     }
+    const objectId = new ObjectId(id);
+    const resultado = await this.publicacionesService.findOne(objectId);
 
     if (resultado) {
       return { payload: resultado };
@@ -127,21 +126,20 @@ export class PublicacionesController {
     @Body() publicacionDto: UpdatePublicacionDto,
     @Headers() headers: any,
   ) {
-    let resultado;
     const token = headers.authorization.split(' ')[1];
-    const decodificado = this.authService.leerToken(token);
+    const decodificado: any = this.authService.leerToken(token);
 
-    try {
-      const usuarioId = new ObjectId((decodificado as any).id);
-      const publicacionId = new ObjectId(id);
-      resultado = await this.publicacionesService.update(
-        publicacionId,
-        publicacionDto,
-        usuarioId,
-      );
-    } catch (error) {
+    if (!isValidObjectId(decodificado.id) || !isValidObjectId(id)) {
       throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     }
+
+    const usuarioId = new ObjectId((decodificado as any).id);
+    const publicacionId = new ObjectId(id);
+    const resultado = await this.publicacionesService.update(
+      publicacionId,
+      publicacionDto,
+      usuarioId,
+    );
 
     if (resultado.matchedCount !== 0) {
       return { payload: { actualizado: true } };
@@ -155,23 +153,22 @@ export class PublicacionesController {
 
   @Delete('publicacion/:id')
   async remove(@Param('id') id: string, @Headers() headers: any) {
-    let resultado;
     const token = headers.authorization.split(' ')[1];
-    const decodificado = this.authService.leerToken(token);
+    const decodificado: any = this.authService.leerToken(token);
 
-    try {
-      const usuarioId = new ObjectId((decodificado as any).id);
-      const acceso = (decodificado as any).acceso;
-
-      const publicacionId = new ObjectId(id);
-      resultado = await this.publicacionesService.remove(
-        publicacionId,
-        usuarioId,
-        acceso === 'admin',
-      );
-    } catch (error) {
+    if (!isValidObjectId(decodificado.id) || !isValidObjectId(id)) {
       throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     }
+
+    const usuarioId = new ObjectId((decodificado as any).id);
+    const acceso = (decodificado as any).acceso;
+
+    const publicacionId = new ObjectId(id);
+    const resultado = await this.publicacionesService.remove(
+      publicacionId,
+      usuarioId,
+      acceso === 'admin',
+    );
 
     if (resultado.matchedCount !== 0) {
       return { payload: { deleted: true } };
@@ -187,15 +184,19 @@ export class PublicacionesController {
   @Post('/like')
   async like(@Body() body: { publicacionId: string }, @Headers() headers: any) {
     const token = headers.authorization.split(' ')[1];
-    const decodificado = this.authService.leerToken(token);
-    try {
-      const usuarioId = new ObjectId((decodificado as any).id);
-      const publicacionId = new ObjectId(body.publicacionId);
-      await this.publicacionesService.darLike(usuarioId, publicacionId);
-      return { payload: true };
-    } catch (err) {
-      console.log(err);
+    const decodificado: any = this.authService.leerToken(token);
+
+    if (
+      !isValidObjectId(decodificado.id) ||
+      !isValidObjectId(body.publicacionId)
+    ) {
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     }
+
+    const usuarioId = new ObjectId(decodificado.id as string);
+    const publicacionId = new ObjectId(body.publicacionId);
+    await this.publicacionesService.darLike(usuarioId, publicacionId);
+    return { payload: true };
   }
 
   @Throttle({ default: { limit: 3, ttl: 2000 } })
@@ -205,14 +206,18 @@ export class PublicacionesController {
     @Headers() headers: any,
   ) {
     const token = headers.authorization.split(' ')[1];
-    const decodificado = this.authService.leerToken(token);
-    try {
-      const usuarioId = new ObjectId((decodificado as any).id);
-      const publicacionId = new ObjectId(body.publicacionId);
-      await this.publicacionesService.darDislike(usuarioId, publicacionId);
-      return { payload: true };
-    } catch (err) {
-      console.log(err);
+    const decodificado: any = this.authService.leerToken(token);
+
+    if (
+      !isValidObjectId(decodificado.id) ||
+      !isValidObjectId(body.publicacionId)
+    ) {
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     }
+
+    const usuarioId = new ObjectId(decodificado.id as string);
+    const publicacionId = new ObjectId(body.publicacionId);
+    await this.publicacionesService.darDislike(usuarioId, publicacionId);
+    return { payload: true };
   }
 }

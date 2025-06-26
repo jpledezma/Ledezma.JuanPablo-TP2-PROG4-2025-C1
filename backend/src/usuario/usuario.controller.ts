@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
@@ -11,7 +10,8 @@ import {
   HttpStatus,
   Headers,
 } from '@nestjs/common';
-import { Types } from 'mongoose';
+import { ObjectId } from 'mongodb';
+import { isValidObjectId } from 'mongoose';
 import { UsuarioService } from './usuario.service';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { GetPublicUsuarioDto } from './dto/get-public-usuario.dto';
@@ -28,15 +28,12 @@ export class UsuarioController {
   ) {}
 
   @UseGuards(AdminGuard)
-  @UseGuards(LogueadoGuard)
   @Get()
   async findAll() {
     const usuarios = await this.usuarioService.findAll();
     return usuarios;
   }
 
-  // @UseGuards(AdminGuard)
-  @UseGuards(LogueadoGuard)
   @Get(':id')
   async findById(@Param('id') id: string, @Headers() headers: any) {
     const token = headers.authorization.split(' ')[1];
@@ -50,7 +47,6 @@ export class UsuarioController {
     }
   }
 
-  @UseGuards(LogueadoGuard)
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -58,34 +54,28 @@ export class UsuarioController {
     @Headers() headers: any,
   ) {
     const token = headers.authorization.split(' ')[1];
-    const decodificado = this.authService.leerToken(token);
-    if ((decodificado as any).id !== id) {
+    const decodificado: any = this.authService.leerToken(token);
+    if (decodificado.id !== id) {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
 
-    try {
-      const objId = new Types.ObjectId(id);
-      return this.usuarioService.update(objId, updateUsuarioDto);
-    } catch (error) {
-      console.log(error);
+    if (!isValidObjectId(id)) {
       throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     }
+
+    return this.usuarioService.update(new ObjectId(id), updateUsuarioDto);
   }
 
   @UseGuards(AdminGuard)
-  @UseGuards(LogueadoGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    try {
-      const objId = new Types.ObjectId(id);
-      return this.usuarioService.remove(objId);
-    } catch (error) {
-      console.log(error);
+    if (!isValidObjectId(id)) {
       throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     }
+
+    return this.usuarioService.remove(new ObjectId(id));
   }
 
-  @UseGuards(LogueadoGuard)
   @Get('public/:id')
   async findByIdPublic(@Param('id') id: string) {
     const usuario = await this.usuarioService.findById(id);

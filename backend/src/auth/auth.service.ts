@@ -23,7 +23,6 @@ export class AuthService {
       const decodificado = verify(token, process.env.JWT_SECRET!);
       return decodificado;
     } catch (error) {
-      //console.log(error);
       return null;
     }
   }

@@ -12,18 +12,15 @@ export class ComentariosService {
     private comentarioModel: Model<Comentario>,
   ) {}
 
-  async create(comentarioDto: CreateComentarioDto) {
-    try {
-      let validarUsuario = new Types.ObjectId(comentarioDto.usuarioId);
-      let validarpublicacion = new Types.ObjectId(comentarioDto.publicacionId);
-    } catch (err) {
-      console.log(err);
-      return null;
-    }
+  async create(
+    publicacionId: Types.ObjectId,
+    usuarioId: Types.ObjectId,
+    contenido: string,
+  ) {
     const instancia = new this.comentarioModel({
-      publicacionId: new Types.ObjectId(comentarioDto.publicacionId),
-      usuarioId: new Types.ObjectId(comentarioDto.usuarioId),
-      contenido: comentarioDto.contenido,
+      publicacionId,
+      usuarioId,
+      contenido,
       fecha: Date.now(),
     });
 

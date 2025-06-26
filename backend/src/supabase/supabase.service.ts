@@ -24,7 +24,6 @@ export class SupabaseService {
       .upload(nombre, buffer, { contentType: `image/${extension}` });
 
     if (error) {
-      console.log(error);
       return null;
     }
 

@@ -12,6 +12,7 @@ import {
   Headers,
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
+import { isValidObjectId } from 'mongoose';
 import { ComentariosService } from './comentarios.service';
 import { CreateComentarioDto } from './dto/create-comentario.dto';
 import { UpdateComentarioDto } from './dto/update-comentario.dto';
@@ -28,10 +29,19 @@ export class ComentariosController {
 
   @Post()
   async create(@Body() comentarioDto: CreateComentarioDto) {
-    const comentario = await this.comentariosService.create(comentarioDto);
-    if (comentario === null) {
-      throw new HttpException('Error de validacion', HttpStatus.BAD_REQUEST);
+    if (
+      !isValidObjectId(comentarioDto.publicacionId) ||
+      !isValidObjectId(comentarioDto.usuarioId)
+    ) {
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     }
+
+    const comentario = await this.comentariosService.create(
+      new ObjectId(comentarioDto.publicacionId),
+      new ObjectId(comentarioDto.usuarioId),
+      comentarioDto.contenido,
+    );
+
     return { payload: comentario };
   }
 
@@ -61,27 +71,24 @@ export class ComentariosController {
     @Headers() headers: any,
   ) {
     const token = headers.authorization.split(' ')[1];
-    const decodificado = this.authSesrvice.leerToken(token);
-
-    let resultado;
-
-    try {
-      const usuarioId = new ObjectId((decodificado as any).id as string);
-      const comentarioId = new ObjectId(id);
-      resultado = await this.comentariosService.update(
-        comentarioId,
-        comentarioDto,
-        usuarioId,
-      );
-    } catch (error) {
+    const decodificado: any = this.authSesrvice.leerToken(token);
+    if (!isValidObjectId(decodificado.id) || !isValidObjectId(id)) {
       throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     }
+
+    const usuarioId = new ObjectId(decodificado.id as string);
+    const comentarioId = new ObjectId(id);
+    const resultado = await this.comentariosService.update(
+      comentarioId,
+      comentarioDto,
+      usuarioId,
+    );
 
     if (resultado.matchedCount !== 0) {
       return { payload: { actualizado: true } };
     } else {
       throw new HttpException(
-        'Publicacion no encontrada',
+        'No se encontró el comentario',
         HttpStatus.NOT_FOUND,
       );
     }
@@ -89,28 +96,26 @@ export class ComentariosController {
 
   @Delete('comentario/:id')
   async remove(@Param('id') id: string, @Headers() headers: any) {
-    let resultado;
     const token = headers.authorization.split(' ')[1];
-    const decodificado = this.authSesrvice.leerToken(token);
-
-    try {
-      const usuarioId = new ObjectId((decodificado as any).id as string);
-      const acceso = (decodificado as any).admin;
-      const comentarioId = new ObjectId(id);
-      resultado = await this.comentariosService.remove(
-        comentarioId,
-        usuarioId,
-        acceso === 'admin',
-      );
-    } catch (error) {
+    const decodificado: any = this.authSesrvice.leerToken(token);
+    if (!isValidObjectId(decodificado.id) || !isValidObjectId(id)) {
       throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     }
+
+    const usuarioId = new ObjectId(decodificado.id as string);
+    const acceso = decodificado.admin;
+    const comentarioId = new ObjectId(id);
+    const resultado = await this.comentariosService.remove(
+      comentarioId,
+      usuarioId,
+      acceso === 'admin',
+    );
 
     if (resultado.matchedCount !== 0) {
       return { payload: { deleted: true } };
     } else {
       throw new HttpException(
-        'No se encontró la publicación',
+        'No se encontró el comentario',
         HttpStatus.NOT_FOUND,
       );
     }
