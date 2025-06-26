@@ -41,6 +41,79 @@
   </form>
 </section>
 
-<section class="busqueda-usuarios">
-
+<section class="lista-usuarios">
+  <table class="tabla-usuarios">
+    <thead class="header-tabla-usuarios">
+      <th>
+        Username 
+        <div class="ordenar">
+          <button (click)="ordenarTabla('username')"><i class="icon-arrow-up"></i></button>
+          <button (click)="ordenarTabla('username', true)"><i class="icon-arrow-down"></i></button>
+        </div>
+      </th>
+      <th>
+        Nombre 
+        <div class="ordenar">
+          <button (click)="ordenarTabla('nombre')"><i class="icon-arrow-up"></i></button>
+          <button (click)="ordenarTabla('nombre', true)"><i class="icon-arrow-down"></i></button>
+        </div>
+      </th>
+      <th>
+        Apellido 
+        <div class="ordenar">
+          <button (click)="ordenarTabla('apellido')"><i class="icon-arrow-up"></i></button>
+          <button (click)="ordenarTabla('apellido', true)"><i class="icon-arrow-down"></i></button>
+        </div>
+      </th>
+      <th>
+        Email 
+        <div class="ordenar">
+          <button (click)="ordenarTabla('email')"><i class="icon-arrow-up"></i></button>
+          <button (click)="ordenarTabla('email', true)"><i class="icon-arrow-down"></i></button>
+        </div>
+      </th>
+      <th>
+        Fecha de inicio 
+        <div class="ordenar">
+          <button (click)="ordenarTabla('createdAt')"><i class="icon-arrow-up"></i></button>
+          <button (click)="ordenarTabla('createdAt', true)"><i class="icon-arrow-down"></i></button>
+        </div>
+      </th>
+      <th>
+        Acceso 
+        <div class="ordenar">
+          <button (click)="ordenarTabla('acceso')"><i class="icon-arrow-up"></i></button>
+          <button (click)="ordenarTabla('acceso', true)"><i class="icon-arrow-down"></i></button>
+        </div>
+      </th>
+      <th>
+        Estado 
+        <div class="ordenar">
+          <button (click)="ordenarTabla('eliminado')"><i class="icon-arrow-up"></i></button>
+          <button (click)="ordenarTabla('eliminado', true)"><i class="icon-arrow-down"></i></button>
+        </div>
+      </th>
+      <th>Eliminar</th>
+    </thead>
+    <tbody>
+      @for (usuario of this.usuarios; track usuario._id) {
+        <tr class="usuario">
+          <td>{{usuario.username}}</td>
+          <td>{{usuario.nombre}}</td>
+          <td>{{usuario.apellido}}</td>
+          <td>{{usuario.email}}</td>
+          <td>{{usuario.createdAt | date:'dd/MM/yyyy'}}</td>
+          <td [style.color]="usuario.acceso === 'admin' ? 'var(--secondary-color)' : ''">{{usuario.acceso}}</td>
+          @if (usuario.eliminado) {
+            <td style="color: red;">Eliminado</td>
+            <td><button title="Restaurar" (click)="restaurarUsuario(usuario._id)"><i class="icon-spinner11"></i></button></td>
+          }
+          @else {
+            <td>Activo</td>
+            <td><button title="Eliminar" (click)="eliminarUsuario(usuario._id)"><i class="icon-blocked"></i></button></td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
 </section>

@@ -33,3 +33,53 @@ section h2 {
 .alta-usuario form input:focus {
   border-color: #fff;
 }
+
+.tabla-usuarios {
+  margin: 0 auto;
+  padding: 1rem;
+  border: 2px solid var(--primary-color);
+  font-size: 1.6rem;
+  border-collapse: collapse;
+}
+
+.tabla-usuarios thead {
+  background-color: var(--primary-color);
+  color: #000;
+}
+
+.tabla-usuarios tr:nth-child(odd) {
+  background-color: var(--bg-color);
+}
+
+.tabla-usuarios tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.tabla-usuarios tr td:first-child {
+  color: var(--secondary-color);
+}
+
+.tabla-usuarios td,
+.tabla-usuarios th {
+  text-align: center;
+  padding: 1rem 0.7rem;
+}
+
+.tabla-usuarios th {
+  white-space: nowrap;
+}
+
+.tabla-usuarios .ordenar {
+  vertical-align: middle;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.tabla-usuarios .ordenar button {
+  margin: 0;
+  padding: 0.5rem;
+  border-radius: 5px;
+  font-size: 1.1rem;
+}
