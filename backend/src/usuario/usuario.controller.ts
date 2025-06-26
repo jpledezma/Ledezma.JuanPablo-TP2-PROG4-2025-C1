@@ -9,6 +9,7 @@ import {
   HttpException,
   HttpStatus,
   Headers,
+  Post,
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { isValidObjectId } from 'mongoose';
@@ -31,7 +32,7 @@ export class UsuarioController {
   @Get()
   async findAll() {
     const usuarios = await this.usuarioService.findAll();
-    return usuarios;
+    return { payload: usuarios };
   }
 
   @Get(':id')
@@ -74,6 +75,18 @@ export class UsuarioController {
     }
 
     return this.usuarioService.remove(new ObjectId(id));
+  }
+
+  @UseGuards(AdminGuard)
+  @Post('/restore')
+  async restore(@Body() body: { id: string }) {
+    const id = body.id;
+
+    if (!isValidObjectId(id)) {
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+    }
+
+    return this.usuarioService.restore(new ObjectId(id));
   }
 
   @Get('public/:id')

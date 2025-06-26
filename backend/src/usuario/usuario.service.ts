@@ -60,4 +60,12 @@ export class UsuarioService {
     );
     return resultado;
   }
+
+  async restore(id: Types.ObjectId) {
+    const resultado = await this.usuarioModel.updateOne(
+      { _id: id },
+      { eliminado: false },
+    );
+    return resultado;
+  }
 }
