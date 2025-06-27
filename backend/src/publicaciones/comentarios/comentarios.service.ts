@@ -45,10 +45,16 @@ export class ComentariosService {
         localField: 'usuarioId',
         foreignField: '_id',
         as: 'usuario',
+        pipeline: [{ $match: { eliminado: false } }],
       },
     };
 
-    const obtenerUsuario = { $unwind: '$usuario' };
+    const obtenerUsuario = {
+      $unwind: {
+        path: '$usuario',
+        preserveNullAndEmptyArrays: true,
+      },
+    };
 
     const seleccionarCampos = {
       $project: {

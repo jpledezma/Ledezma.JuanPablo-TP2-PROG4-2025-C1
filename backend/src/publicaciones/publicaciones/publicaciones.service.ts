@@ -25,11 +25,20 @@ export class PublicacionesService {
     return guardado;
   }
 
-  async findAll(offset?: number, limit?: number, usuarioId?: Types.ObjectId) {
+  async findAll(
+    offset?: number,
+    limit?: number,
+    usuarioId?: Types.ObjectId,
+    publicacionId?: Types.ObjectId,
+  ) {
     const agregacion: any[] = [];
     const match: any = { $match: { eliminado: false } };
     if (usuarioId) {
       match.$match.usuarioId = usuarioId;
+    }
+
+    if (publicacionId) {
+      match.$match._id = publicacionId;
     }
 
     const buscarDatosUsuario = {
@@ -38,10 +47,16 @@ export class PublicacionesService {
         localField: 'usuarioId',
         foreignField: '_id',
         as: 'usuario',
+        pipeline: [{ $match: { eliminado: false } }],
       },
     };
 
-    const obtenerUsuario = { $unwind: '$usuario' };
+    const obtenerUsuario = {
+      $unwind: {
+        path: '$usuario',
+        preserveNullAndEmptyArrays: true,
+      },
+    };
 
     const buscarComentarios = {
       $lookup: {
@@ -99,7 +114,7 @@ export class PublicacionesService {
   }
 
   async findOne(id: Types.ObjectId) {
-    const publicacion = await this.publicacionModel.findById(id);
+    const publicacion = (await this.findAll(0, 1, undefined, id))[0];
     return publicacion;
   }
 
