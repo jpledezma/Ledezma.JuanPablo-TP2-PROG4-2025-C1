@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { sessionGuard } from './guards/session.guard';
 import { authGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard';
+import { NoEncontradoComponent } from './pages/no-encontrado/no-encontrado.component';
 
 export const routes: Routes = [
   {
@@ -54,4 +55,5 @@ export const routes: Routes = [
     pathMatch: 'full',
     redirectTo: 'inicio',
   },
+  { path: '**', component: NoEncontradoComponent },
 ];
