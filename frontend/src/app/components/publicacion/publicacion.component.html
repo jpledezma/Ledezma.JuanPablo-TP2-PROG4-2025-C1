@@ -10,8 +10,13 @@
     </div>
     <div class="header-publicacion">
         <div class="usuario">
-            <img [src]="this.publicacion()?.usuario?.urlFotoThumbnail" alt="foto-usuario">
-            <span>{{`${this.publicacion()?.usuario?.nombre} ${this.publicacion()?.usuario?.apellido}` | titlecase}}</span>
+            @if (this.publicacion()?.usuario) {
+                <img [src]="this.publicacion()?.usuario?.urlFotoThumbnail" alt="foto-usuario">
+                <span>{{`${this.publicacion()?.usuario?.nombre} ${this.publicacion()?.usuario?.apellido}` | titlecase}}</span>
+            }
+            @else {
+                <span style="margin-left: 3rem;">[eliminado]</span>
+            }
         </div>
         <span class="fecha">{{this.publicacion()?.fecha | date:'dd/MM/yyyy - HH:mm'}}</span>
     </div>
@@ -50,17 +55,22 @@
         </div>
         @for (comentario of this.comentarios; track comentario._id) {
             <div class="comentario">
-                @if (this.authService.usuario.username === comentario.usuario.username) {
+                @if (this.authService.usuario.username === comentario.usuario?.username) {
                     <div class="opciones">
                         <button (click)="abrirModificarComentario(comentario)"> <i class="icon-pencil"></i></button>
                         <button (click)="eliminarComentario(comentario, $index)"> <i class="icon-bin"></i></button>
                     </div>
                 }
                 <div class="usuario">
-                    <img [src]="comentario.usuario.urlFotoThumbnail" alt="foto-perfil">
-                    <span [style]="this.authService.usuario.username === comentario.usuario.username ? 'color: var(--secondary-color);' : ''">
-                        {{`${comentario.usuario.nombre} ${comentario.usuario.apellido}` | titlecase}}
-                    </span>
+                    @if (comentario.usuario) {
+                        <img [src]="comentario.usuario.urlFotoThumbnail" alt="foto-perfil">
+                        <span [style]="this.authService.usuario.username === comentario.usuario.username ? 'color: var(--secondary-color);' : ''">
+                            {{`${comentario.usuario.nombre} ${comentario.usuario.apellido}` | titlecase}}
+                        </span>
+                    }
+                    @else {
+                        <span>[eliminado]</span>
+                    }
                     <span class="fecha">{{comentario.fecha | date:'dd/MM/yyyy - HH:mm'}}</span>
                 </div>
                 <p>{{comentario.contenido}}</p>
