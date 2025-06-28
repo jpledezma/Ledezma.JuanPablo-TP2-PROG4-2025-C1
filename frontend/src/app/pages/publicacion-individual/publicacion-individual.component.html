@@ -1,0 +1,86 @@
+<app-header></app-header>
+<div class="publicacion">
+  <div class="opciones">
+    @if (this.authService.usuario.username === publicacion?.usuario?.username) {
+    <button (click)="eliminarPublicacion()"> <i class="icon-bin" title="Eliminar"></i></button>
+    }
+    @if (this.authService.usuario.acceso === "admin") {
+    <button (click)="eliminarPublicacion()"> <i class="icon-blocked" title="Eliminar publicación"></i></button>
+    }
+  </div>
+
+  <div class="header-publicacion">
+    <div class="usuario">
+      @if (this.publicacion?.usuario) {
+      <img [src]="this.publicacion?.usuario?.urlFotoThumbnail" alt="foto-usuario">
+      <span>{{`${this.publicacion?.usuario?.nombre} ${this.publicacion?.usuario?.apellido}` | titlecase}}</span>
+      }
+      @else {
+      <span style="margin-left: 3rem;">[eliminado]</span>
+      }
+    </div>
+    <span class="fecha">{{this.publicacion?.fecha | date:'dd/MM/yyyy - HH:mm'}}</span>
+  </div>
+
+  <h3>{{this.publicacion?.titulo}}</h3>
+
+  @if (this.publicacion?.urlImagen) {
+  <div class="image-container" [style.background-image]="`url(${this.publicacion?.urlImagen})`">
+    <div class="image-background"></div>
+    <img src="{{this.publicacion?.urlImagen}}" alt="imagen-publicacion">
+  </div>
+  }
+
+  <p>{{this.publicacion?.contenido}}</p>
+
+  <div class="footer-publicacion">
+    <div class="likes" (click)="this.darLike()">
+      <i class="icon-thumb-up"
+        [ngStyle]="this.liked ? { 'color': 'var(--primary-color)' } : { 'color': 'var(--text-color)' }"></i>
+      <span>{{this.publicacion?.likes?.length}}</span>
+    </div>
+    <div class="dislikes" (click)="this.darDislike()">
+      <i class="icon-thumb-down"
+        [ngStyle]="this.disliked ? { 'color': 'var(--primary-color)' } : { 'color': 'var(--text-color)' }"></i>
+      <span>{{this.publicacion?.dislikes?.length}}</span>
+    </div>
+    <div class="comentarios" (click)="this.mostrarComentarios()">
+      <i class="icon-chat"></i>
+      <span>Comentarios ({{this.publicacion?.cantidadComentarios || 0}})</span>
+    </div>
+  </div>
+
+  @if (this.comentariosVisibles) {
+  <hr>
+  <div class="escribir-comentario">
+    <textarea [(ngModel)]="this.mensaje" placeholder="Escribe un comentario"></textarea>
+    <button (click)="this.enviarComentario()">Enviar</button>
+  </div>
+    @for (comentario of this.comentarios; track comentario._id) {
+    <div class="comentario">
+      @if (this.authService.usuario.username === comentario.usuario?.username) {
+      <div class="opciones">
+        <button (click)="eliminarComentario(comentario, $index)"> <i class="icon-bin"></i></button>
+      </div>
+      }
+      <div class="usuario">
+        @if (comentario.usuario) {
+        <img [src]="comentario.usuario.urlFotoThumbnail" alt="foto-perfil">
+        <span
+          [style]="this.authService.usuario.username === comentario.usuario.username ? 'color: var(--secondary-color);' : ''">
+          {{`${comentario.usuario.nombre} ${comentario.usuario.apellido}` | titlecase}}
+        </span>
+        }
+        @else {
+        <span>[eliminado]</span>
+        }
+        <span class="fecha">{{comentario.fecha | date:'dd/MM/yyyy - HH:mm'}}</span>
+      </div>
+      <p>{{comentario.contenido}}</p>
+    </div>
+    }
+    @empty {
+    <p style="margin-left: 1rem; font-size: 2rem;">No hay comentarios</p>
+    }
+    }
+</div>

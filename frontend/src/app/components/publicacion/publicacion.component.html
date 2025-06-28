@@ -43,7 +43,10 @@
         </div>
         <div class="comentarios" (click)="this.mostrarComentarios()">
             <i class="icon-chat"></i>
-            <span>Comentarios ({{this.publicacion()!.cantidadComentarios || 0}})</span>
+            <span>Comentarios ({{this.publicacion()?.cantidadComentarios || 0}})</span>
+        </div>
+        <div class="abrir-link" routerLink="/publicacion/{{this.publicacion()?._id}}">
+            <span>Abrir enlace</span>
         </div>
     </div>
 

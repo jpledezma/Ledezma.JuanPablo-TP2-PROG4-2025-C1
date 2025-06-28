@@ -45,6 +45,22 @@ export class PublicacionesService {
     return data;
   }
 
+  async traerPublicacion(id: string | null) {
+    if (!id) {
+      return null;
+    }
+    const peticion = this.httpClient.get(`${this.url}/publicacion/${id}`);
+    let data;
+    try {
+      const respuesta: any = await firstValueFrom(peticion);
+      data = respuesta.payload;
+    } catch (error) {
+      data = null;
+    }
+
+    return data;
+  }
+
   async crearPublicacion(publicacion: any) {
     let respuesta: any;
     const peticion = this.httpClient.post(this.url, publicacion);

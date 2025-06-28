@@ -7,6 +7,7 @@ import { AuthService } from '../../services/auth.service';
 import { PublicacionesService } from '../../services/publicaciones.service';
 import Swal from 'sweetalert2';
 import { CrearPublicacionComponent } from '../crear-publicacion/crear-publicacion.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-publicacion',
@@ -16,6 +17,7 @@ import { CrearPublicacionComponent } from '../crear-publicacion/crear-publicacio
     FormsModule,
     TitleCasePipe,
     CrearPublicacionComponent,
+    RouterLink,
   ],
   templateUrl: './publicacion.component.html',
   styleUrl: './publicacion.component.css',
@@ -268,26 +270,3 @@ export class PublicacionComponent implements OnInit {
     return resultado.isConfirmed;
   }
 }
-
-/*
-darDislike() {
-    const usuarioId = this.authService.usuario._id;
-    this.publicacionService.interactuar(
-      this.publicacion()!.id,
-      this.authService.usuario._id,
-      'dislike',
-    );
-    if (this.disliked) {
-      this.publicacion()!.dislikes.pop();
-      this.disliked = false;
-    } else {
-      this.publicacion()!.dislikes.push(usuarioId);
-      this.disliked = true;
-      this.liked = false;
-      if (this.publicacion()?.likes.includes(usuarioId)) {
-        const index = this.publicacion()?.likes.indexOf(usuarioId);
-        this.publicacion()?.likes.splice(index!, 1);
-      }
-    }
-  }
-  */

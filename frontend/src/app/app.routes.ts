@@ -51,6 +51,14 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'publicacion/:id',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import(
+        './pages/publicacion-individual/publicacion-individual.component'
+      ).then((modulo) => modulo.PublicacionIndividualComponent),
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'inicio',
