@@ -3,6 +3,7 @@ import { sessionGuard } from './guards/session.guard';
 import { authGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard';
 import { NoEncontradoComponent } from './pages/no-encontrado/no-encontrado.component';
+import { CargandoComponent } from './pages/cargando/cargando.component';
 
 export const routes: Routes = [
   {
@@ -61,7 +62,7 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'inicio',
+    component: CargandoComponent,
   },
   { path: '**', component: NoEncontradoComponent },
 ];
