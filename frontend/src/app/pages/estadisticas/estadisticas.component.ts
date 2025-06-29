@@ -1,17 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { EstadisticasService } from '../../services/estadisticas.service';
+import { Component } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
+import { ChartPublicacionesUsuarioComponent } from '../../components/charts/chart-publicaciones-usuario/chart-publicaciones-usuario.component';
 
 @Component({
   selector: 'app-estadisticas',
-  imports: [HeaderComponent],
+  imports: [HeaderComponent, ChartPublicacionesUsuarioComponent],
   templateUrl: './estadisticas.component.html',
   styleUrl: './estadisticas.component.css',
 })
-export class EstadisticasComponent implements OnInit {
-  estadisticasService = inject(EstadisticasService);
-
-  async ngOnInit() {
-    //
-  }
-}
+export class EstadisticasComponent {}
