@@ -65,14 +65,8 @@ section h2 {
   padding: 1rem 0.7rem;
 }
 
-.tabla-usuarios th {
-  white-space: nowrap;
-}
-
 .tabla-usuarios .ordenar {
-  vertical-align: middle;
-  display: inline-flex;
-  flex-direction: column;
+  display: flex;
   justify-content: center;
   align-items: center;
 }

@@ -73,6 +73,10 @@ export class UsuariosComponent implements OnInit {
     }
   }
 
+  copiarIdUsuario(id: string) {
+    navigator.clipboard.writeText(id);
+  }
+
   async eliminarUsuario(id: string) {
     const respuesta = await this.mostrarMensajePregunta('eliminar');
     if (!respuesta) {

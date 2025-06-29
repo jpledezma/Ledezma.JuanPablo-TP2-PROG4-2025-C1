@@ -94,6 +94,7 @@
         </div>
       </th>
       <th>Eliminar</th>
+      <th>Copiar id</th>
     </thead>
     <tbody>
       @for (usuario of this.usuarios; track usuario._id) {
@@ -112,6 +113,7 @@
             <td>Activo</td>
             <td><button title="Eliminar" (click)="eliminarUsuario(usuario._id)"><i class="icon-blocked"></i></button></td>
           }
+          <td><button (click)="copiarIdUsuario(usuario._id)"><i class="icon-copy"></i></button></td>
         </tr>
       }
     </tbody>
