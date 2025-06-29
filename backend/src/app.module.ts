@@ -9,6 +9,7 @@ import { PublicacionesModule } from './publicaciones/publicaciones.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { AuthModule } from './auth/auth.module';
 import { UtilsModule } from './utils/utils.module';
+import { EstadisticasModule } from './estadisticas/estadisticas.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { UtilsModule } from './utils/utils.module';
     UsuarioModule,
     AuthModule,
     UtilsModule,
+    EstadisticasModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],
