@@ -6,6 +6,7 @@
     }
     @if (this.authService.usuario.acceso === "admin") {
     <button (click)="eliminarPublicacion()"> <i class="icon-blocked" title="Eliminar publicación"></i></button>
+    <button (click)="copiarIdPublicacion(publicacion?._id || '')"> <i class="icon-copy" title="Copiar id de publicación"></i></button>
     }
   </div>
 

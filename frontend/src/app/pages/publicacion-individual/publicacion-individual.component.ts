@@ -42,6 +42,10 @@ export class PublicacionIndividualComponent implements OnInit {
     });
   }
 
+  copiarIdPublicacion(id: string) {
+    navigator.clipboard.writeText(id);
+  }
+
   comprobarLikes() {
     const usuarioId = this.authService.usuario._id;
     if (this.publicacion?.likes.includes(usuarioId)) {

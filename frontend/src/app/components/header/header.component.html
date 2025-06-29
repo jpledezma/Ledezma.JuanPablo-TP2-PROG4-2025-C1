@@ -9,8 +9,8 @@
 
         <div class="menu-usuario">
             @if (this.authService.usuario.acceso === "admin") {
-                
-                <a routerLink="/administracion/usuarios">Usuarios</a>
+                <a routerLink="/administracion/estadisticas"> <i class="icon-bar-chart"></i> Estadísticas</a>
+                <a routerLink="/administracion/usuarios"> <i class="icon-user-circle"></i> Usuarios</a>
             }
             <a routerLink="/">
                 Inicio

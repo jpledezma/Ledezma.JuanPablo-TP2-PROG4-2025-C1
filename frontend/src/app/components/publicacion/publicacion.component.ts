@@ -48,6 +48,10 @@ export class PublicacionComponent implements OnInit {
     }
   }
 
+  copiarIdPublicacion(id: string) {
+    navigator.clipboard.writeText(id);
+  }
+
   darLike() {
     this.interactuar('like');
   }

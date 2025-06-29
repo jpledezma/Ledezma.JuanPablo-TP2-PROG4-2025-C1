@@ -49,6 +49,13 @@ export const routes: Routes = [
             (modulo) => modulo.UsuariosComponent,
           ),
       },
+      {
+        path: 'estadisticas',
+        loadComponent: () =>
+          import('./pages/estadisticas/estadisticas.component').then(
+            (modulo) => modulo.EstadisticasComponent,
+          ),
+      },
     ],
   },
   {
