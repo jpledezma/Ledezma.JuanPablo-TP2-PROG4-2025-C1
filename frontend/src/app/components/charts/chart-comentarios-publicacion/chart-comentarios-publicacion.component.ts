@@ -1,18 +1,19 @@
 import { Component, inject } from '@angular/core';
-import { ChartOptions } from '../chart-types';
-import { NgApexchartsModule } from 'ng-apexcharts';
-import { estilos } from '../chart-style';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgApexchartsModule } from 'ng-apexcharts';
 import { EstadisticasService } from '../../../services/estadisticas.service';
+import { estilos } from '../chart-style';
+import { ChartOptions } from '../chart-types';
 import Swal from 'sweetalert2';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-chart-publicaciones-usuario',
-  imports: [NgApexchartsModule, FormsModule, ReactiveFormsModule],
-  templateUrl: './chart-publicaciones-usuario.component.html',
-  styleUrl: './chart-publicaciones-usuario.component.css',
+  selector: 'app-chart-comentarios-publicacion',
+  imports: [NgApexchartsModule, FormsModule, ReactiveFormsModule, RouterLink],
+  templateUrl: './chart-comentarios-publicacion.component.html',
+  styleUrl: './chart-comentarios-publicacion.component.css',
 })
-export class ChartPublicacionesUsuarioComponent {
+export class ChartComentariosPublicacionComponent {
   estilos = estilos;
   estadisticasService = inject(EstadisticasService);
   data: any;
@@ -21,18 +22,19 @@ export class ChartPublicacionesUsuarioComponent {
 
   desde = '';
   hasta = '';
-  usuarioId = '';
+  publicacionId = '';
+  enlacePublicacion?: string;
 
   async buscar() {
-    if (!this.desde || !this.hasta || !this.usuarioId) {
+    if (!this.desde || !this.hasta || !this.publicacionId) {
       return;
     }
 
     const fechaDesde = new Date(this.desde).getTime();
     const fechaHasta = new Date(this.hasta).getTime();
 
-    const data = await this.estadisticasService.traerPublicacionesPorUsuario(
-      this.usuarioId,
+    const data = await this.estadisticasService.traercomentariosPorPublicacion(
+      this.publicacionId,
       fechaDesde,
       fechaHasta,
     );
@@ -56,13 +58,13 @@ export class ChartPublicacionesUsuarioComponent {
   }
 
   cargarDatosEnChart() {
-    const publicacionesPorDia = this.agruparPorDia();
+    const comentariosPorDia = this.agruparPorDia();
 
     this.chartOptions = {
       series: [
         {
-          name: 'Publicaciones',
-          data: publicacionesPorDia.data,
+          name: 'Comentarios',
+          data: comentariosPorDia.data,
         },
       ],
       chart: {
@@ -71,28 +73,29 @@ export class ChartPublicacionesUsuarioComponent {
         foreColor: estilos.textColor,
       },
       title: {
-        text: 'Publicaciones de ' + this.data.username,
+        text: 'Comentarios de la publicación',
       },
       xaxis: {
-        categories: publicacionesPorDia.categories,
+        categories: comentariosPorDia.categories,
         type: 'datetime',
       },
     };
+
+    this.enlacePublicacion = `/publicacion/${this.data._id}`;
   }
 
   agruparPorDia(): { categories: number[]; data: number[] } {
-    // podria pasar el agrupamiento por parametro...
     const UN_DIA = 86400000;
-    const publicacionesPorDia = [];
+    const comentariosPorDia = [];
 
-    for (const publicacion of this.data.publicaciones) {
-      const timestamp = Math.floor(publicacion.fecha / UN_DIA) * UN_DIA;
-      publicacionesPorDia.push(timestamp);
+    for (const comentario of this.data.comentarios) {
+      const timestamp = Math.floor(comentario.fecha / UN_DIA) * UN_DIA;
+      comentariosPorDia.push(timestamp);
     }
 
     // magia
     const valores: any = {};
-    for (const timestamp of publicacionesPorDia) {
+    for (const timestamp of comentariosPorDia) {
       if (valores[timestamp] === undefined) {
         valores[timestamp] = 1;
       } else {

@@ -1,0 +1,31 @@
+<h2>Comentarios por publicación</h2>
+
+<div class="opciones">
+  <label for="desde">
+    Desde:
+    <input type="date" id="desde" [(ngModel)]="this.desde">
+  </label>
+
+  <label for="hasta">
+    Hasta:
+    <input type="date" id="hasta" [(ngModel)]="this.hasta">
+  </label>
+
+  <label for="id-publicacion">
+    Id de publicación:
+    <input type="text" id="id-publicacion" [(ngModel)]="this.publicacionId">
+  </label>
+
+  <button (click)="buscar()">Buscar</button>
+</div>
+
+@if (this.mostrarChart) {
+  <a [routerLink]="this.enlacePublicacion" target="_blank">Abrir enlace</a>
+<apx-chart 
+  [series]="chartOptions?.series!" 
+  [chart]="chartOptions?.chart!" 
+  [xaxis]="chartOptions?.xaxis!"
+  [title]="chartOptions?.title!" 
+  [colors]="this.estilos.colors"
+  ></apx-chart>
+}
