@@ -1,0 +1,26 @@
+<h2>Comentarios</h2>
+
+<div class="opciones">
+  <label for="desde">
+    Desde:
+    <input type="date" id="desde" [(ngModel)]="this.desde">
+  </label>
+
+  <label for="hasta">
+    Hasta:
+    <input type="date" id="hasta" [(ngModel)]="this.hasta">
+  </label>
+
+  <button (click)="buscar()">Buscar</button>
+</div>
+
+@if (this.mostrarChart) {
+  <apx-chart 
+    [series]="chartOptions?.series!" 
+    [chart]="chartOptions?.chart!" 
+    [xaxis]="chartOptions?.xaxis!"
+    [title]="chartOptions?.title!" 
+    [colors]="this.estilos.colors"
+    [theme]="this.estilos.theme"
+    ></apx-chart>
+}
