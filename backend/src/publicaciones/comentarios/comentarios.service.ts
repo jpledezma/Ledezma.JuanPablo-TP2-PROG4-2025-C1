@@ -71,11 +71,16 @@ export class ComentariosService {
       },
     };
 
+    const ordernar = {
+      $sort: { fecha: 1 },
+    };
+
     agregacion.push(
       match,
       buscarDatosUsuario,
       obtenerUsuario,
       seleccionarCampos,
+      ordernar,
     );
 
     const comentarios = await this.comentarioModel.aggregate(agregacion);

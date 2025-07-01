@@ -94,6 +94,10 @@ export class PublicacionesService {
       },
     };
 
+    const ordernar = {
+      $sort: { fecha: -1 },
+    };
+
     agregacion.push(
       match,
       buscarComentarios,
@@ -101,6 +105,7 @@ export class PublicacionesService {
       buscarDatosUsuario,
       obtenerUsuario,
       seleccionarCampos,
+      ordernar,
     );
 
     if (offset !== undefined && limit !== undefined) {
@@ -207,3 +212,16 @@ export class PublicacionesService {
     return encontrado !== null;
   }
 }
+
+// 1751233169953
+// 1751230180176
+// 1751230176949
+// 1751230173884
+// 1750452984622
+// 1750381857962
+// 1750367766110
+// 1750275427944
+// 1750274980710
+// 1750271174076
+// 1750261477127
+// 1750174196571
