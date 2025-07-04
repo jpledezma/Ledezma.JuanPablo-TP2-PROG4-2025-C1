@@ -87,6 +87,8 @@ export class ChartComentariosComponent {
       comentariosPorDia.push(timestamp);
     }
 
+    comentariosPorDia.sort((a, b) => a - b);
+
     // magia
     const valores: any = {};
     for (const timestamp of comentariosPorDia) {
